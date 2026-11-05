@@ -78,6 +78,19 @@ function chunks(text, speech, maxWords, maxChars) {
   return place(phrases.flatMap(split), speech);
 }
 
+// Captions from real word times: each 1-3 word group shows exactly while it is spoken.
+function wordChunks(words, maxWords, maxChars) {
+  const out = []; let g = [];
+  const flush = () => { if (g.length) out.push({ text: g.map(x => x.w).join(' '), start: g[0].start, end: g[g.length - 1].end }); g = []; };
+  for (const w of words) {
+    if (g.length && (g.length >= maxWords || (g.map(x => x.w).join(' ') + ' ' + w.w).length > maxChars)) flush();
+    g.push(w);
+    if (/[.!?,:;]["')]*$/.test(w.w)) flush();
+  }
+  flush();
+  return out;
+}
+
 // Scary words light up red.
 const RED_WORDS = /^(NEVER|DON'?T|NOT|NO|ALWAYS|RUN|STOP|HIDE|LOOK|EYES|BEHIND|DARK|WRONG|SHUT|NOBODY|A|B)[.,!?:;]*$/;
 function captionText(text) {
@@ -101,7 +114,7 @@ function assHeader(f) {
   ];
 }
 
-function buildAss({ subtitle, label, voiceDur, speech, duration, bottom, f }) {
+function buildAss({ subtitle, label, voiceDur, speech, words, duration, bottom, f }) {
   const brand = env('BRAND_TEXT', 'KEEP YOUR EYES SHUT');
   const cx = f.width / 2;
   const lines = assHeader(f);
@@ -109,8 +122,9 @@ function buildAss({ subtitle, label, voiceDur, speech, duration, bottom, f }) {
   if (label) lines.push(`Dialogue: 1,${assTime(0)},${assTime(duration)},Label,,0,0,0,,{\\an5\\pos(${cx},${f.labelMarginV})\\fad(250,200)}${assText(label.toUpperCase())}`);
   if (bottom) lines.push(`Dialogue: 1,${assTime(0.1)},${assTime(duration)},Hook,,0,0,0,,{\\an5\\pos(${cx},${f.hookMarginV})\\fad(250,200)}${assText(bottom)}`);
   const capY = f.picY + Math.round(f.pic * 0.66);
-  const parts = speech && speech.length ? speech : [{ start: 0.1, end: Math.max(0.6, voiceDur) }];
-  const caps = chunks(subtitle, parts, 3, 16);
+  let caps;
+  if (words && words.length) caps = wordChunks(words, 3, 16);   // exact: real word times
+  else caps = chunks(subtitle, speech && speech.length ? speech : [{ start: 0.1, end: Math.max(0.6, voiceDur) }], 3, 16);
   // keep each caption a moment longer into a pause (until the next one starts), so short words don't flash
   caps.forEach((c, k) => { c.end = caps[k + 1] ? Math.min(caps[k + 1].start, c.end + 0.6) : Math.min(duration, c.end + 0.6); });
   for (const c of caps) {
@@ -137,29 +151,29 @@ function prepareFonts(workDir) {
 }
 
 function backgroundFilter(f) {
-  return `scale=${f.width}:${f.height}:force_original_aspect_ratio=increase,crop=${f.width}:${f.height},boxblur=40:3,eq=brightness=-0.30:saturation=0.6`;
+  return `scale=${f.width}:${f.height}:force_original_aspect_ratio=increase,crop=${f.width}:${f.height},boxblur=40:3,eq=brightness=-0.22:saturation=0.65`;
 }
 
-async function renderScene(i, { image, voice, voiceDur, speech, subtitle, label, bottom, isLast, workDir, f }) {
+async function renderScene(i, { image, voice, voiceDur, speech, words, subtitle, label, bottom, isLast, workDir, f }) {
   const frames = Math.round((voiceDur + (isLast ? 1.5 : f.gap)) * FPS);
   const duration = frames / FPS; // exact, so video and audio never drift
   const m = MOTIONS[i % MOTIONS.length](frames);
   const assName = `subs${i + 1}.ass`;
-  fs.writeFileSync(path.join(workDir, assName), buildAss({ subtitle, label, voiceDur, speech, duration, bottom, f }));
+  fs.writeFileSync(path.join(workDir, assName), buildAss({ subtitle, label, voiceDur, speech, words, duration, bottom, f }));
   const img = path.basename(image), out = `seg${i + 1}.mp4`;
   const fadeOut = Math.max(0, duration - 0.25).toFixed(2);
   const filter = [
     `[0:v]${backgroundFilter(f)},fps=${FPS}[bg]`,
     `[1:v]scale=${f.pic * 2}:${f.pic * 2}:force_original_aspect_ratio=increase,crop=${f.pic * 2}:${f.pic * 2},` +
       `zoompan=z='${m.z}':x='${m.x}':y='${m.y}':d=${frames}:s=${f.pic}x${f.pic}:fps=${FPS},` +
-      `eq=contrast=1.08:saturation=0.8:brightness=-0.03,vignette=angle=PI/4.5[fg]`,
-    `[bg][fg]overlay=${f.picX}:${f.picY}:shortest=1,noise=alls=9:allf=t,` +
+      `eq=contrast=1.06:saturation=0.85,unsharp=5:5:0.6,vignette=angle=PI/5.5[fg]`,
+    `[bg][fg]overlay=${f.picX}:${f.picY}:shortest=1,noise=alls=${Number(env('GRAIN', '3'))}:allf=t,` +
       `fade=t=in:st=0:d=0.25,fade=t=out:st=${fadeOut}:d=0.25,subtitles=${assName}:fontsdir=fonts,format=yuv420p[v]`
   ].join(';');
   await runFFmpeg([
     '-y', '-loop', '1', '-t', String(duration), '-i', img, '-i', img,
     '-filter_complex', filter, '-map', '[v]', '-an',
-    '-c:v', 'libx264', '-preset', env('X264_PRESET', 'veryfast'), '-crf', '21', '-r', String(FPS),
+    '-c:v', 'libx264', '-preset', env('X264_PRESET', 'faster'), '-crf', env('CRF', '17'), '-tune', 'film', '-r', String(FPS),
     '-frames:v', String(frames), out
   ], workDir);
   return { file: path.join(workDir, out), duration, voice: path.basename(voice), voiceDur };
@@ -175,7 +189,7 @@ async function buildVideo(story, images, voices, workDir) {
     const bottom = i === 0 ? story.title.replace(/^POV:\s*/i, 'POV: ').toUpperCase()
       : i === last ? env('END_TEXT', 'COMMENT A OR B') : null;
     segs.push(await renderScene(i, {
-      image: images[i], voice: voices[i].file, voiceDur: voices[i].duration, speech: voices[i].speech,
+      image: images[i], voice: voices[i].file, voiceDur: voices[i].duration, speech: voices[i].speech, words: voices[i].words,
       subtitle: scene.subtitle, label: scene.label, bottom,
       isLast: i === last, workDir, f
     }));

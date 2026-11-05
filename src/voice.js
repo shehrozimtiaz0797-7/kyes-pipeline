@@ -3,6 +3,7 @@
 // The whole story is spoken in ONE request, then split into scenes at the natural pauses,
 // so one video costs only one voice request.
 const fs = require('fs');
+const { execFile } = require('child_process');
 const path = require('path');
 const { ttsStyle } = require('./horror-audio');
 const { ROOT, env, requireEnv, fetchRetry, runFFmpeg, runFFmpegCapture, sleep, log } = require('./lib');
@@ -82,6 +83,30 @@ async function speechParts(file, dur, workDir) {
   return parts.length ? parts : [{ start: 0.05, end: dur }];
 }
 
+// Word times with speech recognition (align.py + faster-whisper). Returns per-line word lists, or null.
+async function alignWords(full, lines, workDir) {
+  if (env('ALIGN', 'yes').toLowerCase() === 'no') return null;
+  const py = env('PYTHON', process.platform === 'win32' ? 'python' : 'python3');
+  const linesFile = path.join(workDir, 'lines.json'), outFile = path.join(workDir, 'words.json');
+  fs.writeFileSync(linesFile, JSON.stringify(lines));
+  try {
+    const res = await new Promise(resolve => {
+      execFile(py, [path.join(ROOT, 'align.py'), full, linesFile, outFile], { timeout: 600000, windowsHide: true },
+        (err, stdout, stderr) => resolve({ err, text: (stdout + stderr).trim() }));
+    });
+    if (res.err || !fs.existsSync(outFile)) {
+      log(`Word timing not available (${(res.text.split(/\r?\n/).pop() || res.err?.message || '').slice(0, 160)}), using pause detection.`);
+      return null;
+    }
+    const data = JSON.parse(fs.readFileSync(outFile, 'utf8'));
+    log(`Word timing: ${data.matched}/${data.total} words matched to the voice.`);
+    return data.lines;
+  } catch (err) {
+    log(`Word timing failed (${err.message}), using pause detection.`);
+    return null;
+  }
+}
+
 // Picks where each scene's line ends: the pause closest to where it "should" be by text length.
 function chooseCuts(lines, total, pauses) {
   const weights = lines.map(l => Math.max(1, l.length));
@@ -128,14 +153,29 @@ async function makeVoiceOvers(story, workDir) {
       : `Voice part ${p + 1}/${parts}: recording ${group.length} lines...`);
     if (p > 0) await sleep(Number(env('TTS_DELAY_MS', '6000')));
     const total = await speak(group.join('\n\n'), full);
-    const pauses = await findPauses(full, workDir);
-    const cuts = chooseCuts(group, total, pauses);
+    // Best: real word times from speech recognition. Fallback: cut at pauses (less exact).
+    const words = await alignWords(full, group, workDir);
+    let cuts;
+    if (words) {
+      cuts = [0];
+      for (let i = 1; i < group.length; i++) {
+        const prevEnd = words[i - 1].length ? words[i - 1][words[i - 1].length - 1].end : cuts[i - 1];
+        const nextStart = words[i].length ? words[i][0].start : prevEnd;
+        cuts.push(Math.max(cuts[i - 1] + 0.2, Math.min(total, (prevEnd + Math.max(prevEnd, nextStart)) / 2)));
+      }
+      cuts.push(total);
+    } else {
+      cuts = chooseCuts(group, total, await findPauses(full, workDir));
+    }
     for (let i = 0; i < group.length; i++) {
       const n = out.length + 1;
       const file = path.join(workDir, `voice${n}.wav`);
       const start = cuts[i], end = cuts[i + 1];
       await runFFmpeg(['-y', '-i', path.basename(full), '-ss', start.toFixed(3), '-to', end.toFixed(3), '-c:a', 'pcm_s16le', path.basename(file)], workDir);
-      out.push({ file, duration: end - start, speech: await speechParts(file, end - start, workDir) });
+      const item = { file, duration: end - start };
+      if (words) item.words = words[i].map(w => ({ w: w.w, start: Math.max(0, w.start - start), end: Math.max(0, w.end - start) }));
+      else item.speech = await speechParts(file, end - start, workDir);
+      out.push(item);
     }
     grand += total;
   }

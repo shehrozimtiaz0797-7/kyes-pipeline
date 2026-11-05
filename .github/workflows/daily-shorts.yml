@@ -42,6 +42,8 @@ jobs:
       AMBIENCE_VOLUME: "0.06"
       VOICE_PITCH: "0.94"
       VOICE_REVERB: "0.22"
+      PYTHON: python
+      WHISPER_MODEL: base.en
       # ----- Secrets (Settings -> Secrets and variables -> Actions) -----
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
@@ -61,6 +63,19 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg > /dev/null
           ffmpeg -version | head -1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install word-timing tool (makes captions match the voice)
+        run: pip install -q faster-whisper==1.1.1
+
+      - name: Reuse the speech model between runs
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: whisper-base-en-v1
 
       - name: Check keys (safe preview, first and last 4 characters only)
         run: node keys-preview.js
