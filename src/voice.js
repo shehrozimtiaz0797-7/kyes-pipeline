@@ -36,7 +36,7 @@ async function speak(text, outFile, voiceOverride) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      contents: [{ parts: [{ text: style ? `${style}\n\n${text}` : text }] }],
+      contents: [{ parts: [{ text: style ? `${style}\n${text}` : text }] }],
       generationConfig: {
         responseModalities: ['AUDIO'],
         speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName } } }
@@ -90,6 +90,9 @@ async function alignWords(full, lines, workDir) {
   const linesFile = path.join(workDir, 'lines.json'), outFile = path.join(workDir, 'words.json');
   fs.writeFileSync(linesFile, JSON.stringify(lines));
   try {
+    const wav16 = path.join(workDir, 'voice16k.wav');
+    await runFFmpeg(['-y', '-i', path.basename(full), '-ac', '1', '-ar', '16000', '-c:a', 'pcm_s16le', 'voice16k.wav'], workDir);
+    full = wav16;
     const res = await new Promise(resolve => {
       execFile(py, [path.join(ROOT, 'align.py'), full, linesFile, outFile], { timeout: 600000, windowsHide: true },
         (err, stdout, stderr) => resolve({ err, text: (stdout + stderr).trim() }));
@@ -99,7 +102,7 @@ async function alignWords(full, lines, workDir) {
       return null;
     }
     const data = JSON.parse(fs.readFileSync(outFile, 'utf8'));
-    log(`Word timing: ${data.matched}/${data.total} words matched to the voice.`);
+    log(`Word timing (${data.engine}): ${data.matched}/${data.total} words matched to the voice.`);
     return data.lines;
   } catch (err) {
     log(`Word timing failed (${err.message}), using pause detection.`);
@@ -157,13 +160,17 @@ async function makeVoiceOvers(story, workDir) {
     const words = await alignWords(full, group, workDir);
     let cuts;
     if (words) {
-      cuts = [0];
+      // start at the first real story word (skips anything the voice said before the story)
+      const first = words.find(l => l.length), last = [...words].reverse().find(l => l.length);
+      const begin = first ? Math.max(0, first[0].start - 0.25) : 0;
+      if (begin > 1) log(`Skipping ${begin.toFixed(1)}s of extra speech before the story.`);
+      cuts = [begin];
       for (let i = 1; i < group.length; i++) {
         const prevEnd = words[i - 1].length ? words[i - 1][words[i - 1].length - 1].end : cuts[i - 1];
         const nextStart = words[i].length ? words[i][0].start : prevEnd;
         cuts.push(Math.max(cuts[i - 1] + 0.2, Math.min(total, (prevEnd + Math.max(prevEnd, nextStart)) / 2)));
       }
-      cuts.push(total);
+      cuts.push(last ? Math.min(total, last[last.length - 1].end + 0.6) : total);
     } else {
       cuts = chooseCuts(group, total, await findPauses(full, workDir));
     }

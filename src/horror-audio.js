@@ -3,10 +3,8 @@
 // the voice gets a little deeper with a cold room echo, and a low dark drone plays underneath.
 const { env } = require('./lib');
 
-const DEFAULT_STYLE =
-  'You are narrating a creepy horror story at 3 AM. Speak in a low, hushed, breathy voice, close to the microphone, ' +
-  'slow and tense, as if you are scared someone in the dark is listening. Leave uneasy pauses between lines, ' +
-  'and drop almost to a whisper on the scariest words. Read only the story below, word for word:';
+// Keep this SHORT and in Google's "Say ...:" form. A long instruction gets read out loud by the voice.
+const DEFAULT_STYLE = 'Say slowly, in a low, eerie whisper:';
 
 function ttsStyle() { return env('HORROR_STYLE', DEFAULT_STYLE); }
 

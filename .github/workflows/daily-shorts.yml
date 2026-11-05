@@ -69,7 +69,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install word-timing tool (makes captions match the voice)
-        run: pip install -q faster-whisper==1.1.1
+        run: pip install -q faster-whisper==1.1.1 pocketsphinx
 
       - name: Reuse the speech model between runs
         uses: actions/cache@v4
