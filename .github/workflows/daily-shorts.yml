@@ -32,6 +32,8 @@ jobs:
       # ----- Settings (edit here) -----
       SHORTS_PER_RUN: "1"
       SHORT_SCENES: "12"
+      # unique pictures per video (each used for 1-2 scenes) - keeps 4 videos/day inside the free image limit
+      IMAGES_PER_VIDEO: "7"
       PRIVACY: public
       GEMINI_TEXT_MODEL: gemini-3.8-flash
       GEMINI_TTS_MODEL: gemini-3.8-flash-tts
@@ -48,6 +50,9 @@ jobs:
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
       CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      # optional backup Cloudflare account (used when the first one's daily limit is reached)
+      CF_ACCOUNT_ID_2: ${{ secrets.CF_ACCOUNT_ID_2 }}
+      CF_API_TOKEN_2: ${{ secrets.CF_API_TOKEN_2 }}
       YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
       YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
       YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
