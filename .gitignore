@@ -1,0 +1,7 @@
+.env
+youtube-token.json
+node_modules/
+output/
+logs/
+check-image.jpg
+*.bak

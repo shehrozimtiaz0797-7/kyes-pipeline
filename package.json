@@ -1,0 +1,16 @@
+{
+  "name": "kyes-pipeline",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Keep Your Eyes Shut: automatic creepy POV rules Shorts — story, pictures, voice, video and YouTube upload",
+  "scripts": {
+    "check": "node check.js",
+    "auth": "node auth.js",
+    "test-video": "node make-video.js --no-upload",
+    "start": "node make-video.js"
+  },
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0"
+  },
+  "engines": { "node": ">=20" }
+}

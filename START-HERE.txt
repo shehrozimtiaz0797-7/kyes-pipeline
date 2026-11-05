@@ -1,0 +1,36 @@
+KEEP YOUR EYES SHUT — automatic creepy POV "rules" Shorts
+==========================================================
+
+What it does (every run, in the cloud):
+  story (Gemini) -> 12 dark pictures (Cloudflare) -> deep voice (Gemini, voice "Charon")
+  -> vertical video with big captions + "RULE 1" labels + A/B ending -> upload to YouTube (public)
+
+Daily plan: 2 Shorts (GitHub runs it twice a day, timed for US evening viewers).
+
+ONE-TIME SETUP ON YOUR LAPTOP
+1) Unzip this folder to the Desktop:  C:\Users\AAUEC\Desktop\kyes-pipeline
+2) Open Command Prompt in that folder and run:
+       npm install
+3) Copy .env.example to .env and paste the 5 NEW values
+   (Gemini key, Cloudflare Account ID + Token, YouTube Client ID + Secret).
+   Use the new keys, NOT the AI Wala ones.
+4) Connect YouTube:
+       node auth.js
+   IMPORTANT: on the Google page choose the "Keep Your Eyes Shut" channel, not AI Wala.
+5) Check everything:
+       node check.js
+   It must say: YouTube connected: Keep Your Eyes Shut
+6) Test video (not uploaded):
+       node make-video.js --no-upload
+   The video is in the output folder.
+
+PUT IT IN THE CLOUD (laptop can be off)
+7) Make a NEW private GitHub repo named kyes-pipeline and push this folder.
+8) In the repo: Settings -> Secrets and variables -> Actions -> add 6 secrets.
+   Get them with:  node print-secrets.js   (keep that window private)
+       GEMINI_API_KEY, CF_ACCOUNT_ID, CF_API_TOKEN,
+       YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN
+9) Actions tab -> "Keep Your Eyes Shut daily Shorts" -> Run workflow (test once).
+
+Settings to change later: .github/workflows/daily-shorts.yml (voice, times, scenes).
+Story places and the art style: style.js

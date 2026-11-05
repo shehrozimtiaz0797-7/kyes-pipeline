@@ -1,0 +1,93 @@
+name: Keep Your Eyes Shut daily Shorts
+
+on:
+  schedule:
+    # Two Shorts a day, timed for US evening viewers (horror does best at night):
+    # 23:37 UTC = 6:37 PM New York = 7:37 AM Malaysia
+    - cron: "37 23 * * *"
+    # 02:37 UTC = 9:37 PM New York = 10:37 AM Malaysia
+    - cron: "37 2 * * *"
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: "Optional story idea (leave empty for a random one)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kyes-daily
+  cancel-in-progress: false
+
+jobs:
+  make-and-upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      TZ: Asia/Kuala_Lumpur
+      FFMPEG_PATH: ffmpeg
+      # ----- Settings (edit here) -----
+      SHORTS_PER_RUN: "1"
+      SHORT_SCENES: "12"
+      PRIVACY: public
+      GEMINI_TEXT_MODEL: gemini-3.8-flash
+      GEMINI_TTS_MODEL: gemini-3.8-flash-tts
+      GEMINI_TTS_VOICE: Charon
+      VOICE_SCRIPT: english
+      TTS_STYLE: "Read this like a calm, low, slow narrator telling a creepy story late at night, almost whispering, with small pauses between lines:"
+      BRAND_TEXT: KEEP YOUR EYES SHUT
+      AMBIENCE_VOLUME: "0.035"
+      # ----- Secrets (Settings -> Secrets and variables -> Actions) -----
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+      CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+      YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+      YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg > /dev/null
+          ffmpeg -version | head -1
+
+      - name: Check keys (safe preview, first and last 4 characters only)
+        run: node keys-preview.js
+
+      - name: Make and upload a Short
+        env:
+          TOPIC: ${{ github.event.inputs.topic }}
+        run: |
+          if [ -n "$TOPIC" ]; then node make-video.js --topic "$TOPIC"; else node make-video.js; fi
+
+      - name: Save story history (so stories never repeat)
+        if: always()
+        run: |
+          if [ -f history.json ]; then
+            git config user.name "kyes-bot"
+            git config user.email "kyes-bot@users.noreply.github.com"
+            git add history.json
+            git commit -m "Update story history $(date +'%Y-%m-%d %H:%M')" || echo "Nothing to save"
+            git pull --rebase || true
+            git push || echo "Could not save history"
+          fi
+
+      - name: Keep the video for 2 days (download from this page)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: short-${{ github.run_number }}
+          path: |
+            output/*/final.mp4
+            output/*/story.json
+            logs/pipeline.log
+          retention-days: 2
+          if-no-files-found: ignore
