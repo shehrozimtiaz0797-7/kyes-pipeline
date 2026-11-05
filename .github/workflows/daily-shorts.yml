@@ -2,12 +2,12 @@ name: Keep Your Eyes Shut daily Shorts
 
 on:
   schedule:
-    # Two Shorts a day, public right after upload. A run takes about 8-10 minutes,
-    # so it starts a little early to go live around 9 PM and 12 AM Malaysia time.
-    # 12:48 UTC = 8:48 PM Malaysia  ->  live about 9 PM
-    - cron: "48 12 * * *"
-    # 15:48 UTC = 11:48 PM Malaysia ->  live about 12 AM
-    - cron: "48 15 * * *"
+    # Four Shorts a day, public right after upload. A run takes about 8-10 minutes,
+    # so each one starts a little early to go live around the hour (Malaysia time).
+    - cron: "48 5 * * *"    # 1:48 PM Malaysia  ->  live about 2 PM
+    - cron: "48 9 * * *"    # 5:48 PM Malaysia  ->  live about 6 PM
+    - cron: "48 12 * * *"   # 8:48 PM Malaysia  ->  live about 9 PM
+    - cron: "48 15 * * *"   # 11:48 PM Malaysia ->  live about 12 AM
   workflow_dispatch:
     inputs:
       topic:
