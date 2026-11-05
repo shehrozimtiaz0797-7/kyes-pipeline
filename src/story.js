@@ -65,7 +65,7 @@ function parseJSON(text) {
 // Models to try in order. If the first is busy (503) or rate-limited, the next one writes the story.
 function storyModels() {
   const main = env('GEMINI_TEXT_MODEL', 'gemini-3.8-flash');
-  const backups = env('GEMINI_TEXT_FALLBACKS', 'gemini-3.5-flash-lite').split(/[,\s]+/).filter(Boolean);
+  const backups = env('GEMINI_TEXT_FALLBACKS', 'gemini-3.5-flash-lite,gemini-3.5-flash').split(/[,\s]+/).filter(Boolean);
   return [...new Set([main, ...backups])];
 }
 
@@ -75,7 +75,14 @@ async function writeStory(topic, kind = 'short') {
   const sceneCount = fmt.scenes();
   const models = storyModels();
   let lastError = null;
+  const rounds = Math.max(1, Number(env('STORY_ROUNDS', '4')));
 
+  for (let round = 1; round <= rounds; round++) {
+  if (round > 1) {
+    const wait = Number(env('STORY_ROUND_WAIT_MS', '180000'));
+    log(`All story models are busy (Google high demand). Waiting ${Math.round(wait / 60000)} min, then trying again (round ${round}/${rounds})...`);
+    await new Promise(r => setTimeout(r, wait));
+  }
   for (const [m, model] of models.entries()) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
     const isLast = m === models.length - 1;
@@ -89,13 +96,14 @@ async function writeStory(topic, kind = 'short') {
           body: JSON.stringify({
             contents: [{ parts: [{ text: buildPrompt(topic, sceneCount, fmt) }] }],
             generationConfig: { temperature: 1.0, responseMimeType: 'application/json' }
-          })
-        }, `Gemini story (${model})`, isLast ? 6 : 3);
+          }),
+          timeoutMs: Number(env('STORY_TIMEOUT_MS', '150000'))
+        }, `Gemini story (${model})`, 3);
         data = await res.json();
       } catch (err) {
         lastError = err;
-        if (!isLast && /\[(429|500|502|503|504|404)\]|busy|FREE limit/i.test(err.message)) {
-          log(`${model} is busy or unavailable, switching to ${models[m + 1]}...`);
+        if (/\[(429|500|502|503|504|404|400)\]|busy|FREE limit|failed:|abort|timeout/i.test(err.message)) {
+          log(isLast ? `${model} is busy or unavailable too.` : `${model} is busy or unavailable, switching to ${models[m + 1]}...`);
           break;
         }
         throw err;
@@ -119,6 +127,7 @@ async function writeStory(topic, kind = 'short') {
         log(`Story attempt ${attempt} was not usable (${err.message}), trying again...`);
       }
     }
+  }
   }
   throw new Error('Could not get a usable story from Gemini: ' + (lastError ? lastError.message : 'unknown error'));
 }

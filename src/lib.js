@@ -54,7 +54,9 @@ async function fetchRetry(url, options = {}, label = 'request', tries = 6) {
   for (let attempt = 1; attempt <= tries; attempt++) {
     let res;
     try {
-      res = await fetch(url, options);
+      // a fresh timeout for every attempt, so one stuck request can't block the whole run
+      const { timeoutMs, ...opts } = options;
+      res = await fetch(url, timeoutMs ? { ...opts, signal: AbortSignal.timeout(timeoutMs) } : opts);
     } catch (err) {
       if (attempt === tries) throw new Error(`${label} failed: ${err.message}`);
       log(`${label}: network error (${err.message}), retrying in ${wait / 1000}s...`);
