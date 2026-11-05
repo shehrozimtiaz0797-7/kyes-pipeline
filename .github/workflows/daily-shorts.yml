@@ -2,11 +2,12 @@ name: Keep Your Eyes Shut daily Shorts
 
 on:
   schedule:
-    # Two Shorts a day, timed for US evening viewers (horror does best at night):
-    # 23:37 UTC = 6:37 PM New York = 7:37 AM Malaysia
-    - cron: "37 23 * * *"
-    # 02:37 UTC = 9:37 PM New York = 10:37 AM Malaysia
-    - cron: "37 2 * * *"
+    # Two Shorts a day, public right after upload. A run takes about 8-10 minutes,
+    # so it starts a little early to go live around 9 PM and 12 AM Malaysia time.
+    # 12:48 UTC = 8:48 PM Malaysia  ->  live about 9 PM
+    - cron: "48 12 * * *"
+    # 15:48 UTC = 11:48 PM Malaysia ->  live about 12 AM
+    - cron: "48 15 * * *"
   workflow_dispatch:
     inputs:
       topic:
@@ -34,11 +35,13 @@ jobs:
       PRIVACY: public
       GEMINI_TEXT_MODEL: gemini-3.8-flash
       GEMINI_TTS_MODEL: gemini-3.8-flash-tts
-      GEMINI_TTS_VOICE: Charon
+      # Voices take turns, one per video (male Gacrux, female Sulafat)
+      GEMINI_TTS_VOICE: Gacrux,Sulafat
       VOICE_SCRIPT: english
-      TTS_STYLE: "Read this like a calm, low, slow narrator telling a creepy story late at night, almost whispering, with small pauses between lines:"
       BRAND_TEXT: KEEP YOUR EYES SHUT
-      AMBIENCE_VOLUME: "0.035"
+      AMBIENCE_VOLUME: "0.06"
+      VOICE_PITCH: "0.94"
+      VOICE_REVERB: "0.22"
       # ----- Secrets (Settings -> Secrets and variables -> Actions) -----
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}

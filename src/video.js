@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { ROOT, env, runFFmpeg, log } = require('./lib');
 const { format } = require('./formats');
+const { voiceFx, droneInputs, droneFx } = require('./horror-audio');
 
 const FPS = 30;
 const RED = '&H004A4AFF';      // #FF4A4A in ASS (BGR) order
@@ -154,25 +155,15 @@ async function buildVideo(story, images, voices, workDir) {
   await runFFmpeg(['-y', ...voiceInputs, '-filter_complex', voiceFilter, '-map', '[voice]', '-c:a', 'pcm_s16le', 'voice_all.wav'], workDir);
 
   const total = segs.reduce((n, s) => n + s.duration, 0);
-  // A very quiet low room-tone hum under the voice adds tension (set AMBIENCE_VOLUME=0 to turn off).
-  const amb = Number(env('AMBIENCE_VOLUME', '0.035'));
+  // Horror sound: deeper voice with a cold echo + a low dark drone underneath (AMBIENCE_VOLUME=0 turns the drone off).
   const audioArgs = ['-c:a', 'aac', '-b:a', '160k', '-ar', '44100', '-ac', '2'];
-  if (amb > 0) {
-    await runFFmpeg([
-      '-y', '-i', 'joined.mp4', '-i', 'voice_all.wav',
-      '-f', 'lavfi', '-t', total.toFixed(3), '-i', 'anoisesrc=color=brown:amplitude=1:seed=7',
-      '-filter_complex',
-      `[2:a]lowpass=f=180,volume=${amb},aformat=sample_fmts=fltp:channel_layouts=stereo,aresample=44100,` +
-      `afade=t=in:d=1.5,afade=t=out:st=${Math.max(0, total - 1.5).toFixed(2)}:d=1.5[n];` +
-      `[1:a][n]amix=inputs=2:duration=first:dropout_transition=0:normalize=0[a]`,
-      '-map', '0:v', '-map', '[a]', '-c:v', 'copy', ...audioArgs, '-t', total.toFixed(3), 'final.mp4'
-    ], workDir);
-  } else {
-    await runFFmpeg([
-      '-y', '-i', 'joined.mp4', '-i', 'voice_all.wav', '-map', '0:v', '-map', '1:a',
-      '-c:v', 'copy', ...audioArgs, '-t', total.toFixed(3), 'final.mp4'
-    ], workDir);
-  }
+  await runFFmpeg([
+    '-y', '-i', 'joined.mp4', '-i', 'voice_all.wav', ...droneInputs(total),
+    '-filter_complex',
+    `${voiceFx('1:a', 'v')};${droneFx(2, 3, total, 'd')};` +
+    `[v][d]amix=inputs=2:duration=first:dropout_transition=0:normalize=0,alimiter=limit=0.95[a]`,
+    '-map', '0:v', '-map', '[a]', '-c:v', 'copy', ...audioArgs, '-t', total.toFixed(3), 'final.mp4'
+  ], workDir);
   const final = path.join(workDir, 'final.mp4');
   log(`Video ready: ${final} (${total.toFixed(1)}s)`);
   return { file: final, duration: total, thumbnail: null };

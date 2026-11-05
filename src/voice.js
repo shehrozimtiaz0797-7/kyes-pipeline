@@ -4,7 +4,8 @@
 // so one video costs only one voice request.
 const fs = require('fs');
 const path = require('path');
-const { env, requireEnv, fetchRetry, runFFmpeg, runFFmpegCapture, sleep, log } = require('./lib');
+const { ttsStyle } = require('./horror-audio');
+const { ROOT, env, requireEnv, fetchRetry, runFFmpeg, runFFmpegCapture, sleep, log } = require('./lib');
 
 function wavFromPcm(pcm, sampleRate) {
   const header = Buffer.alloc(44);
@@ -15,11 +16,20 @@ function wavFromPcm(pcm, sampleRate) {
   return Buffer.concat([header, pcm]);
 }
 
-async function speak(text, outFile) {
+// GEMINI_TTS_VOICE can be one voice or a list ("Gacrux,Sulafat"): videos take turns.
+function pickVoice() {
+  const list = env('GEMINI_TTS_VOICE', 'Gacrux,Sulafat').split(/[,\s]+/).filter(Boolean);
+  if (list.length === 1) return list[0];
+  let n = 0;
+  try { n = JSON.parse(fs.readFileSync(path.join(ROOT, 'history.json'), 'utf8')).length; } catch (_) {}
+  return list[n % list.length];
+}
+
+async function speak(text, outFile, voiceOverride) {
   const key = requireEnv('GEMINI_API_KEY');
   const model = env('GEMINI_TTS_MODEL', 'gemini-3.8-flash-tts');
-  const voiceName = env('GEMINI_TTS_VOICE', 'Kore');
-  const style = env('TTS_STYLE', '');
+  const voiceName = voiceOverride || pickVoice();
+  const style = ttsStyle();
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
   const res = await fetchRetry(url, {
     method: 'POST',
@@ -34,6 +44,7 @@ async function speak(text, outFile) {
   }, 'Gemini voice');
   const data = await res.json();
   const part = data.candidates?.[0]?.content?.parts?.find(p => p.inlineData?.data);
+  log(`Voice: ${voiceName}`);
   if (!part) throw new Error('Gemini voice returned no audio: ' + JSON.stringify(data).slice(0, 300));
   const rate = Number((part.inlineData.mimeType || '').match(/rate=(\d+)/)?.[1] || 24000);
   const pcm = Buffer.from(part.inlineData.data, 'base64');
@@ -116,4 +127,4 @@ async function makeVoiceOvers(story, workDir) {
   return out;
 }
 
-module.exports = { makeVoiceOvers, wavFromPcm, chooseCuts };
+module.exports = { makeVoiceOvers, wavFromPcm, chooseCuts, speak };
