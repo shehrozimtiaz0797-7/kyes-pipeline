@@ -53,8 +53,8 @@ async function speak(text, outFile, voiceOverride) {
 }
 
 // Finds pauses in the narration: returns [{start, end, mid}] in seconds.
-async function findPauses(file, workDir) {
-  const out = await runFFmpegCapture(['-i', path.basename(file), '-af', 'silencedetect=noise=-38dB:d=0.18', '-f', 'null', '-'], workDir);
+async function findPauses(file, workDir, minPause = 0.18) {
+  const out = await runFFmpegCapture(['-i', path.basename(file), '-af', `silencedetect=noise=-38dB:d=${minPause}`, '-f', 'null', '-'], workDir);
   const pauses = [];
   let start = null;
   for (const line of out.split(/\r?\n/)) {
@@ -64,6 +64,22 @@ async function findPauses(file, workDir) {
     if (e && start !== null) { const end = Number(e[1]); pauses.push({ start, end, mid: (start + end) / 2, len: end - start }); start = null; }
   }
   return pauses;
+}
+
+// Where the voice is actually speaking inside one scene clip: [{start, end}] in seconds.
+// Used to time the captions exactly with the voice (skipping the quiet gaps).
+async function speechParts(file, dur, workDir) {
+  let pauses = [];
+  try { pauses = await findPauses(file, workDir, 0.12); } catch (_) { /* fall back below */ }
+  const parts = [];
+  let t = 0;
+  for (const p of pauses) {
+    const end = Math.min(p.start, dur);
+    if (end - t > 0.08) parts.push({ start: t, end });
+    t = Math.max(t, p.end);
+  }
+  if (dur - t > 0.08) parts.push({ start: t, end: dur });
+  return parts.length ? parts : [{ start: 0.05, end: dur }];
 }
 
 // Picks where each scene's line ends: the pause closest to where it "should" be by text length.
@@ -119,7 +135,7 @@ async function makeVoiceOvers(story, workDir) {
       const file = path.join(workDir, `voice${n}.wav`);
       const start = cuts[i], end = cuts[i + 1];
       await runFFmpeg(['-y', '-i', path.basename(full), '-ss', start.toFixed(3), '-to', end.toFixed(3), '-c:a', 'pcm_s16le', path.basename(file)], workDir);
-      out.push({ file, duration: end - start });
+      out.push({ file, duration: end - start, speech: await speechParts(file, end - start, workDir) });
     }
     grand += total;
   }
@@ -127,4 +143,4 @@ async function makeVoiceOvers(story, workDir) {
   return out;
 }
 
-module.exports = { makeVoiceOvers, wavFromPcm, chooseCuts, speak };
+module.exports = { makeVoiceOvers, wavFromPcm, chooseCuts, speak, speechParts };

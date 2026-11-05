@@ -20,26 +20,62 @@ function assText(s) {
   return String(s).replace(/\\/g, '/').replace(/[{}]/g, '').replace(/\r?\n/g, ' ');
 }
 
-// Split a line into 1-3 word captions, timed by length so they follow the voice.
-function chunks(text, start, end, maxWords, maxChars) {
-  const words = String(text).split(/\s+/).filter(Boolean);
-  const groups = [];
+// Split a line into 1-3 word captions and time them with the voice.
+// "speech" = where the voice is really talking in this scene (from the pause detector).
+function chunks(text, speech, maxWords, maxChars) {
+  // 1) sentences / phrases (the voice pauses at . ! ? , : ;)
+  const phrases = [];
   let cur = [];
-  for (const w of words) {
-    if (cur.length && (cur.length >= maxWords || (cur.join(' ') + ' ' + w).length > maxChars)) { groups.push(cur.join(' ')); cur = []; }
+  for (const w of String(text).split(/\s+/).filter(Boolean)) {
     cur.push(w);
-    if (/[.!?,:;]$/.test(w)) { groups.push(cur.join(' ')); cur = []; } // break at punctuation
+    if (/[.!?,:;]["')]*$/.test(w)) { phrases.push(cur); cur = []; }
   }
-  if (cur.length) groups.push(cur.join(' '));
-  const weight = g => g.length + 4;
-  const total = groups.reduce((n, g) => n + weight(g), 0) || 1;
-  let t = start;
-  return groups.map(g => {
-    const d = (end - start) * (weight(g) / total);
-    const item = { text: g, start: t, end: t + d };
-    t += d;
-    return item;
-  });
+  if (cur.length) phrases.push(cur);
+  // 2) each phrase into small caption groups
+  const split = words => {
+    const out = []; let g = [];
+    for (const w of words) {
+      if (g.length && (g.length >= maxWords || (g.join(' ') + ' ' + w).length > maxChars)) { out.push(g.join(' ')); g = []; }
+      g.push(w);
+    }
+    if (g.length) out.push(g.join(' '));
+    return out;
+  };
+  const weight = g => g.replace(/[^A-Za-z0-9']/g, '').length + 2;
+  // place groups evenly (by length) inside one stretch of speech
+  const place = (groups, parts) => {
+    const total = groups.reduce((n, g) => n + weight(g), 0) || 1;
+    const talk = parts.reduce((n, p) => n + (p.end - p.start), 0) || 1;
+    const at = x => {
+      for (const p of parts) { const len = p.end - p.start; if (x < len - 1e-6) return p.start + x; x -= len; }
+      return parts[parts.length - 1].end;
+    };
+    let acc = 0;
+    return groups.map((g, k) => {
+      const a = k === 0 ? parts[0].start : at(talk * acc / total + 1e-4);
+      acc += weight(g);
+      const b = k === groups.length - 1 ? parts[parts.length - 1].end : at(talk * acc / total);
+      return { text: g, start: a, end: Math.max(b, a + 0.12) };
+    });
+  };
+  // 3) match phrases to speech stretches: merge the shortest gaps until the counts are equal
+  let parts = speech.map(p => ({ ...p }));
+  while (parts.length > phrases.length) {
+    let k = 0, best = Infinity;
+    for (let j = 0; j < parts.length - 1; j++) { const gap = parts[j + 1].start - parts[j].end; if (gap < best) { best = gap; k = j; } }
+    parts.splice(k, 2, { start: parts[k].start, end: parts[k + 1].end, gaps: [...(parts[k].gaps || []), ...(parts[k + 1].gaps || []), { start: parts[k].end, end: parts[k + 1].start }] });
+  }
+  const speaking = p => { // a merged stretch minus its inner gaps
+    const out = []; let t = p.start;
+    for (const g of (p.gaps || []).sort((x, y) => x.start - y.start)) { out.push({ start: t, end: g.start }); t = g.end; }
+    out.push({ start: t, end: p.end });
+    return out.filter(x => x.end - x.start > 0.01);
+  };
+  if (parts.length === phrases.length) {
+    return phrases.flatMap((ph, k) => place(split(ph), speaking(parts[k])));
+  }
+  // fewer pauses than phrases: spread everything over all the speech
+  return place(phrases.flatMap(split), speech);
 }
 
 // Scary words light up red.
@@ -65,7 +101,7 @@ function assHeader(f) {
   ];
 }
 
-function buildAss({ subtitle, label, voiceDur, duration, bottom, f }) {
+function buildAss({ subtitle, label, voiceDur, speech, duration, bottom, f }) {
   const brand = env('BRAND_TEXT', 'KEEP YOUR EYES SHUT');
   const cx = f.width / 2;
   const lines = assHeader(f);
@@ -73,7 +109,11 @@ function buildAss({ subtitle, label, voiceDur, duration, bottom, f }) {
   if (label) lines.push(`Dialogue: 1,${assTime(0)},${assTime(duration)},Label,,0,0,0,,{\\an5\\pos(${cx},${f.labelMarginV})\\fad(250,200)}${assText(label.toUpperCase())}`);
   if (bottom) lines.push(`Dialogue: 1,${assTime(0.1)},${assTime(duration)},Hook,,0,0,0,,{\\an5\\pos(${cx},${f.hookMarginV})\\fad(250,200)}${assText(bottom)}`);
   const capY = f.picY + Math.round(f.pic * 0.66);
-  for (const c of chunks(subtitle, 0.1, Math.max(0.6, voiceDur), 3, 16)) {
+  const parts = speech && speech.length ? speech : [{ start: 0.1, end: Math.max(0.6, voiceDur) }];
+  const caps = chunks(subtitle, parts, 3, 16);
+  // keep each caption a moment longer into a pause (until the next one starts), so short words don't flash
+  caps.forEach((c, k) => { c.end = caps[k + 1] ? Math.min(caps[k + 1].start, c.end + 0.6) : Math.min(duration, c.end + 0.6); });
+  for (const c of caps) {
     lines.push(`Dialogue: 2,${assTime(c.start)},${assTime(c.end)},Sub,,0,0,0,,` +
       `{\\an5\\pos(${cx},${capY})\\fscx82\\fscy82\\t(0,90,\\fscx100\\fscy100)}${captionText(c.text)}`);
   }
@@ -100,12 +140,12 @@ function backgroundFilter(f) {
   return `scale=${f.width}:${f.height}:force_original_aspect_ratio=increase,crop=${f.width}:${f.height},boxblur=40:3,eq=brightness=-0.30:saturation=0.6`;
 }
 
-async function renderScene(i, { image, voice, voiceDur, subtitle, label, bottom, isLast, workDir, f }) {
+async function renderScene(i, { image, voice, voiceDur, speech, subtitle, label, bottom, isLast, workDir, f }) {
   const frames = Math.round((voiceDur + (isLast ? 1.5 : f.gap)) * FPS);
   const duration = frames / FPS; // exact, so video and audio never drift
   const m = MOTIONS[i % MOTIONS.length](frames);
   const assName = `subs${i + 1}.ass`;
-  fs.writeFileSync(path.join(workDir, assName), buildAss({ subtitle, label, voiceDur, duration, bottom, f }));
+  fs.writeFileSync(path.join(workDir, assName), buildAss({ subtitle, label, voiceDur, speech, duration, bottom, f }));
   const img = path.basename(image), out = `seg${i + 1}.mp4`;
   const fadeOut = Math.max(0, duration - 0.25).toFixed(2);
   const filter = [
@@ -135,7 +175,7 @@ async function buildVideo(story, images, voices, workDir) {
     const bottom = i === 0 ? story.title.replace(/^POV:\s*/i, 'POV: ').toUpperCase()
       : i === last ? env('END_TEXT', 'COMMENT A OR B') : null;
     segs.push(await renderScene(i, {
-      image: images[i], voice: voices[i].file, voiceDur: voices[i].duration,
+      image: images[i], voice: voices[i].file, voiceDur: voices[i].duration, speech: voices[i].speech,
       subtitle: scene.subtitle, label: scene.label, bottom,
       isLast: i === last, workDir, f
     }));
