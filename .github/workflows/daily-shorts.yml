@@ -83,9 +83,6 @@ jobs:
           path: ~/.cache/huggingface
           key: whisper-base-en-v1
 
-      - name: Check keys (safe preview, first and last 4 characters only)
-        run: node keys-preview.js
-
       - name: Make and upload a Short
         env:
           TOPIC: ${{ github.event.inputs.topic }}
