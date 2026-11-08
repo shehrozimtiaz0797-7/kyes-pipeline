@@ -1,14 +1,8 @@
 name: Keep Your Eyes Shut daily Shorts
 
 on:
-  schedule:
-    # Five Shorts a day, public right after upload. A run takes about 8-10 minutes,
-    # so each one starts ~25 min early to go live by the target time (Malaysia time).
-    - cron: "35 12 * * *"   # 8:35 PM Malaysia  ->  live by 9 PM
-    - cron: "35 14 * * *"   # 10:35 PM Malaysia ->  live by 11 PM
-    - cron: "35 16 * * *"   # 12:35 AM Malaysia ->  live by 1 AM
-    - cron: "35 18 * * *"   # 2:35 AM Malaysia  ->  live by 3 AM
-    - cron: "35 20 * * *"   # 4:35 AM Malaysia  ->  live by 5 AM
+  # No GitHub 'schedule' here: runs are started on time by cron-job.org
+  # (GitHub's own schedule is often late or skipped).
   workflow_dispatch:
     inputs:
       topic:
