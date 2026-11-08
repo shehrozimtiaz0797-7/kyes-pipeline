@@ -2,12 +2,13 @@ name: Keep Your Eyes Shut daily Shorts
 
 on:
   schedule:
-    # Four Shorts a day, public right after upload. A run takes about 8-10 minutes,
-    # so each one starts a little early to go live around the hour (Malaysia time).
-    - cron: "48 5 * * *"    # 1:48 PM Malaysia  ->  live about 2 PM
-    - cron: "48 9 * * *"    # 5:48 PM Malaysia  ->  live about 6 PM
-    - cron: "48 12 * * *"   # 8:48 PM Malaysia  ->  live about 9 PM
-    - cron: "48 15 * * *"   # 11:48 PM Malaysia ->  live about 12 AM
+    # Five Shorts a day, public right after upload. A run takes about 8-10 minutes,
+    # so each one starts ~25 min early to go live by the target time (Malaysia time).
+    - cron: "35 12 * * *"   # 8:35 PM Malaysia  ->  live by 9 PM
+    - cron: "35 14 * * *"   # 10:35 PM Malaysia ->  live by 11 PM
+    - cron: "35 16 * * *"   # 12:35 AM Malaysia ->  live by 1 AM
+    - cron: "35 18 * * *"   # 2:35 AM Malaysia  ->  live by 3 AM
+    - cron: "35 20 * * *"   # 4:35 AM Malaysia  ->  live by 5 AM
   workflow_dispatch:
     inputs:
       topic:
@@ -32,7 +33,7 @@ jobs:
       # ----- Settings (edit here) -----
       SHORTS_PER_RUN: "1"
       SHORT_SCENES: "12"
-      # unique pictures per video (each used for 1-2 scenes) - keeps 4 videos/day inside the free image limit
+      # unique pictures per video (each used for 1-2 scenes) - keeps 5 videos/day inside the free image limit
       IMAGES_PER_VIDEO: "7"
       PRIVACY: public
       GEMINI_TEXT_MODEL: gemini-3.8-flash
