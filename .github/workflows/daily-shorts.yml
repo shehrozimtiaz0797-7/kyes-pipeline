@@ -33,7 +33,7 @@ jobs:
       # ----- Settings (edit here) -----
       SHORTS_PER_RUN: "1"
       SHORT_SCENES: "12"
-      # unique pictures per video (each used for 1-2 scenes) - keeps 5 videos/day inside the free image limit
+      # unique pictures per video (each used for 1-2 scenes) - keeps 4 videos/day inside the free image limit
       IMAGES_PER_VIDEO: "7"
       PRIVACY: public
       GEMINI_TEXT_MODEL: gemini-3.8-flash
@@ -82,6 +82,9 @@ jobs:
         with:
           path: ~/.cache/huggingface
           key: whisper-base-en-v1
+
+      - name: Check keys (safe preview, first and last 4 characters only)
+        run: node keys-preview.js
 
       - name: Make and upload a Short
         env:
