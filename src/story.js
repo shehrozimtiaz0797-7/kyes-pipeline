@@ -19,7 +19,9 @@ function addHistory(entry) {
 
 function buildPrompt(topic, sceneCount, fmt) {
   const past = readHistory().slice(-40).map(h => `- ${h.title}`).join('\n') || '- (none yet)';
-  const setting = topic || look.settings[Math.floor(Math.random() * look.settings.length)];
+  const pool = (look.settingsHot && Math.random() < 0.75) ? look.settingsHot : look.settings;
+  const setting = topic || pool[Math.floor(Math.random() * pool.length)];
+  const short = sceneCount <= 10;
 
   return `You write scripts for "Keep Your Eyes Shut", a YouTube Shorts channel of creepy POV "rules" horror stories.
 The viewer is the main character: always write in second person ("You...", "Your...").
@@ -27,11 +29,11 @@ Tone: calm, quiet, slow-burn dread, like someone whispering a warning. Creepy, n
 
 Setting: ${setting}
 
-Write exactly ${sceneCount} scenes for a vertical Short of about 60-80 seconds. Structure:
-- Scene 1: a hook that drops the viewer straight into the situation in one line (e.g. "It's 3 AM, and the flight attendant just handed you a note.").
+Write exactly ${sceneCount} scenes for a vertical Short of about 55-70 seconds. Structure:
+- Scene 1: the HOOK. Under 10 words. It must make the viewer stop scrolling: a threat, a question or something wrong, with no warm-up (e.g. "The flight attendant just handed you a note. Do not read it.").
 - Scene 2: where the rules come from (a note, a sign, a voice, a logbook).
-- Then 4 to 6 rules, one per scene, each with a short creepy detail. Each rule starts with "Rule one:", "Rule two:" and so on.
-- Then 2 or 3 scenes where something goes wrong: a rule is tested, something breaks the pattern.
+- Then ${short ? '3 to 4' : '4 to 6'} rules, one per scene, each with a short creepy detail. Each rule starts with "Rule one:", "Rule two:" and so on.
+- Then ${short ? '1 or 2' : '2 or 3'} scenes where something goes wrong: a rule is tested, something breaks the pattern.
 - Second-to-last scene: the final impossible moment.
 - Last scene: give the viewer a choice in this exact pattern: "Do you A, <option>, or B, <option>? Comment A or B." Both options must sound risky.
 
@@ -39,6 +41,7 @@ Line rules:
 - Each scene is ONE spoken line of ${fmt.wordsPerLine} words. Simple English, short sentences, easy to read as big captions.
 - "label": "RULE 1", "RULE 2"... on rule scenes; "A or B?" on the last scene; empty string "" on all other scenes.
 - "image_prompt": English, 25-50 words, one clear dark moment for the picture. When the viewer is in the picture write "YOU" in capitals. Never describe a face; strange beings are faceless silhouettes or shadows. No blood, no gore, no weapons, no injuries, no dead bodies, no children in danger. No text or signs in the picture.
+- The number of rules named in the title must be exactly the number of rules in the story.
 - Fiction only. No real places, brands, people or real tragedies.
 
 Do not repeat these earlier stories:
@@ -46,7 +49,7 @@ ${past}
 
 Return ONLY valid JSON in this exact shape:
 {
-  "title": "curiosity title under 70 characters, e.g. 'POV: The Night Shift Has 5 Rules. Never Break #3'",
+  "title": "curiosity title under 70 characters. Use the form 'POV: <Person> Left 5 Rules About <Object>' about two times out of three (e.g. 'POV: Grandma Left 5 Rules About the Scarecrow', 'POV: The Landlord Left 5 Rules About Room 4B'); otherwise 'POV: <Place> Has 5 Rules. Never <action>'",
   "description": "2 short sentences that tease the story without spoiling it, and say it is a fictional horror story",
   "tags": ["8 to 12 short tags"],
   "scenes": [ { "text": "...", "label": "", "image_prompt": "..." } ]

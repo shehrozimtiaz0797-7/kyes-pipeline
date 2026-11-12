@@ -16,6 +16,27 @@ module.exports = {
     'a tall thin faceless shadowy figure, silhouette only, partly hidden in darkness',
 
   // Where the stories happen. The story writer picks one when no topic is given.
+
+  // Outdoor and rural places got the most views so far (forest, scarecrow, amusement park), so these are picked more often.
+  settingsHot: [
+    'a rented room where the landlord left rules about the door at the end of the hall',
+    'your late aunt\'s flat where she left rules taped inside the kitchen cupboard',
+    'grandpa\'s old workshop where he left rules about the locked back room',
+    'a house you are sitting for neighbours who left rules about the basement',
+    'grandma\'s farm where she left rules about the old scarecrow',
+    'a forest ranger station where the previous ranger left rules for the night',
+    'a cornfield farmhouse where grandma left rules about the scarecrow',
+    'an abandoned amusement park you must close alone at night',
+    'a lakeside cabin where the owner left rules about the dock after dark',
+    'a roadside gas station in the desert on a night with no other cars',
+    'a campground where the host gives you rules about the tree line',
+    'an old drive-in cinema where the projectionist leaves rules for the last show',
+    'a swamp boat tour where the guide gives you rules before sunset',
+    'a mountain cable car that stops in the dark between two stations',
+    'a lonely farm during a storm where the farmer leaves a list on the door',
+    'an orchard at night where the keeper tells you never to count the trees',
+    'a night train through empty countryside where the guard gives you a list'
+  ],
   settings: [
     'a night flight where the flight attendant hands you a list of rules',
     'your first night shift alone at a 24-hour gas station on an empty highway',
