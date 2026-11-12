@@ -8,6 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 const { ROOT, env, log, slugify } = require('./src/lib');
+const { withRetry, isQuota, sleep } = require('./src/retry');
 const { writeStory, addHistory, readHistory } = require('./src/story');
 const { makeSceneImages } = require('./src/images');
 const { makeVoiceOvers } = require('./src/voice');
@@ -51,7 +52,7 @@ async function makeOne(topic) {
   if (NO_UPLOAD) log('Upload skipped (--no-upload). Video is in: ' + workDir);
   else {
     const usedSlots = readHistory().map(h => h.publishAt).filter(t => t && new Date(t).getTime() > Date.now());
-    ({ id: videoId, publishAt } = await upload(video.file, story, usedSlots, null));
+    ({ id: videoId, publishAt } = await withRetry('YouTube upload', () => upload(video.file, story, usedSlots, null), { tries: 3, waitMs: 45000, log }));
   }
 
   addHistory({ title: story.title, kind: story.kind, date: new Date().toISOString(), videoId, publishAt, folder: path.basename(workDir) });
@@ -65,13 +66,23 @@ async function makeOne(topic) {
   log(`===== Keep Your Eyes Shut pipeline started (${count} Short${count > 1 ? 's' : ''}) =====`);
   let failed = 0;
   for (let i = 0; i < count; i++) {
-    try {
-      const r = await makeOne(i === 0 ? topic : null);
-      log(`Done ${i + 1}/${count}: ${r.story.title}`);
-    } catch (err) {
+    let ok = false, lastErr = null;
+    for (let attempt = 1; attempt <= 2 && !ok; attempt++) {
+      try {
+        const r = await makeOne(i === 0 ? topic : null);
+        log(`Done ${i + 1}/${count}: ${r.story.title}`);
+        ok = true;
+      } catch (err) {
+        lastErr = err;
+        log(`✗ Video ${i + 1} (attempt ${attempt}/2) failed: ${err.message}`);
+        if (isQuota(err.message) || attempt === 2) break;
+        log('Trying once more with a new story in 30 seconds...');
+        await sleep(30000);
+      }
+    }
+    if (!ok) {
       failed++;
-      log(`✗ Video ${i + 1} failed: ${err.message}`);
-      if (/FREE limit is used up/.test(err.message) && /voice/i.test(err.message)) {
+      if (/FREE limit is used up/.test(lastErr.message) && /voice/i.test(lastErr.message)) {
         log('Voice limit reached for today, stopping this run.');
         failed += count - i - 1;
         break;
