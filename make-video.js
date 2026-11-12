@@ -55,7 +55,7 @@ async function makeOne(topic) {
     ({ id: videoId, publishAt } = await withRetry('YouTube upload', () => upload(video.file, story, usedSlots, null), { tries: 3, waitMs: 45000, log }));
   }
 
-  addHistory({ title: story.title, kind: story.kind, date: new Date().toISOString(), videoId, publishAt, folder: path.basename(workDir) });
+  addHistory({ title: story.title, setting: story.setting || '', kind: story.kind, date: new Date().toISOString(), videoId, publishAt, folder: path.basename(workDir) });
   cleanup(workDir);
   return { story, videoId, file: video.file };
 }
