@@ -5,6 +5,10 @@ on:
   # (GitHub's own schedule is often late or skipped).
   workflow_dispatch:
     inputs:
+      force:
+        description: "Run now even outside the 3 daily slots"
+        type: boolean
+        default: false
       topic:
         description: "Optional story idea (leave empty for a random one)"
         required: false
@@ -18,7 +22,25 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # 3 videos a day. cron-job.org may still call more often; runs outside
+  # these Malaysia-time slots (12:45am, 2:45am, 4:45am) stop here in a few seconds.
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      go: ${{ steps.slot.outputs.go }}
+    steps:
+      - id: slot
+        run: |
+          H=$(TZ=Asia/Kuala_Lumpur date -d '-20 min' +%H)
+          GO=0
+          for S in 00 02 04; do [ "$H" = "$S" ] && GO=1; done
+          [ "${{ inputs.force }}" = "true" ] && GO=1
+          echo "slot hour $H -> go=$GO"
+          echo "go=$GO" >> "$GITHUB_OUTPUT"
+
   make-and-upload:
+    needs: gate
+    if: needs.gate.outputs.go == '1'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
