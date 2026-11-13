@@ -19,6 +19,17 @@ module.exports = {
 
   // Outdoor and rural places got the most views so far (forest, scarecrow, amusement park), so these are picked more often.
   settingsHot: [
+    // home / family triggers (the 'If Your X Ever...' format got 1-5M views on other US channels)
+    'your dog starts staring at the dark hallway every night at 3 AM, and you find old rules about it taped inside the closet',
+    'your mom says goodnight to you twice in one night, and you remember the rules she made you learn as a kid',
+    'your cat starts sitting outside your bedroom door every night at exactly 3 AM',
+    'your phone gets a text from your own number with a list of rules',
+    'your neighbour slips a note under your door: never answer if he knocks after midnight',
+    'your smart speaker starts whispering rules to you at night',
+    'your dad comes home from work twice in one evening',
+    'your reflection starts moving one second after you do',
+    'your roommate starts talking to someone in the empty room next door',
+    'your grandfather\'s old clock starts ticking backwards at midnight',
     'a rented room where the landlord left rules about the door at the end of the hall',
     'your late aunt\'s flat where she left rules taped inside the kitchen cupboard',
     'grandpa\'s old workshop where he left rules about the locked back room',
