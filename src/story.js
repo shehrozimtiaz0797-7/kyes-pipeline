@@ -33,6 +33,10 @@ function buildPrompt(topic, sceneCount, fmt) {
     ? 'Invent a fresh, original setting yourself: an ordinary place real people know (not a famous landmark). It must be clearly different from every earlier story listed below.'
     : setting;
   const short = sceneCount <= 10;
+  // not every video has 5 rules, so the titles and stories do not all look the same
+  const pickN = list => list[Math.floor(Math.random() * list.length)];
+  const rules = short ? pickN([3, 3, 4]) : pickN([4, 5, 5, 6]);
+  const wrong = Math.max(1, sceneCount - 4 - rules);
 
   return `You write scripts for "Keep Your Eyes Shut", a YouTube Shorts channel of creepy POV "rules" horror stories.
 The viewer is the main character: always write in second person ("You...", "Your...").
@@ -41,15 +45,17 @@ Tone: calm, quiet, slow-burn dread, like someone whispering a warning. Creepy, n
 Setting: ${settingLine}
 
 Write exactly ${sceneCount} scenes for a vertical Short of about 55-70 seconds. Structure:
-- Scene 1: the HOOK. Under 10 words. It must make the viewer stop scrolling: a threat, a question or something wrong, with no warm-up (e.g. "The flight attendant just handed you a note. Do not read it.").
-- Scene 2: where the rules come from (a note, a sign, a voice, a logbook).
-- Then ${short ? '3 to 4' : '4 to 6'} rules, one per scene, each with a short creepy detail. Each rule starts with "Rule one:", "Rule two:" and so on.
-- Then ${short ? '1 or 2' : '2 or 3'} scenes where something goes wrong: a rule is tested, something breaks the pattern.
+- Scene 1: the COLD OPEN. 5 to 8 words. Start in the middle of the scariest moment of the story, when a rule is already being broken, with no warm-up and no "POV" (e.g. "It is knocking. You broke rule three.", "The scarecrow is not in the field anymore."). The viewer must feel danger in the first second.
+- Scene 2: 6 to 10 words. Jump back: where the rules came from (a note, a sign, a voice, a logbook), e.g. "One hour ago, grandma left you a note."
+- Then ${rules} rules, one per scene, each with a short creepy detail. Each rule starts with "Rule one:", "Rule two:" and so on.
+- Then ${wrong} scene${wrong > 1 ? 's' : ''} where something goes wrong: a rule is tested, something breaks the pattern.
 - Second-to-last scene: the final impossible moment.
 - Last scene: give the viewer a choice in this exact pattern: "Do you A, <option>, or B, <option>? Comment A or B." Both options must sound risky.
 
 Line rules:
-- Each scene is ONE spoken line of ${fmt.wordsPerLine} words. Simple English, short sentences, easy to read as big captions.
+- Each scene is ONE spoken line of ${fmt.wordsPerLine} words (scenes 1 and 2 are shorter, as said above). Simple English, short sentences, easy to read as big captions.
+- Scene 1 "image_prompt" must be the most striking picture of the whole story: the threat itself, close and clear (a faceless silhouette right behind YOU, a hand-shaped shadow on the door, the thing standing where it should not be). Never an empty room or a calm establishing shot.
+- The "something goes wrong" scenes must lead back to the moment shown in scene 1 and then go past it.
 - "label": "RULE 1", "RULE 2"... on rule scenes; "A or B?" on the last scene; empty string "" on all other scenes.
 - "image_prompt": English, 25-50 words, one clear dark moment for the picture. When the viewer is in the picture write "YOU" in capitals. Never describe a face; strange beings are faceless silhouettes or shadows. No blood, no gore, no weapons, no injuries, no dead bodies, no children in danger. No text or signs in the picture.
 - The number of rules named in the title must be exactly the number of rules in the story.
@@ -62,7 +68,7 @@ ${past}
 
 Return ONLY valid JSON in this exact shape:
 {
-  "title": "curiosity title under 70 characters. Use the form 'POV: <Person> Left 5 Rules About <Object>' about two times out of three (e.g. 'POV: Grandma Left 5 Rules About the Scarecrow', 'POV: The Landlord Left 5 Rules About Room 4B'); otherwise 'POV: <Place> Has 5 Rules. Never <action>'",
+  "title": "curiosity title under 70 characters. Use the form 'POV: <Person> Left ${rules} Rules About <Object>' about two times out of three (e.g. 'POV: Grandma Left ${rules} Rules About the Scarecrow', 'POV: The Landlord Left ${rules} Rules About Room 4B'); otherwise 'POV: <Place> Has ${rules} Rules. Never <action>'",
   "description": "2 short sentences that tease the story without spoiling it, and say it is a fictional horror story",
   "tags": ["8 to 12 short tags"],
   "scenes": [ { "text": "...", "label": "", "image_prompt": "..." } ]
