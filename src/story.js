@@ -18,11 +18,34 @@ function addHistory(entry) {
   fs.writeFileSync(HISTORY, JSON.stringify(h.slice(-300), null, 2));
 }
 
+
+// Place "themes": two settings with the same theme count as the same story (e.g. two different attic or college stories).
+const THEMES = [
+  ['hostel'], ['college', 'university', 'campus'], ['attic', 'grandmother', 'grandma', 'nani', 'dadi'],
+  ['lake', 'boat', 'dock', 'canal', 'river'], ['bus'], ['haveli'], ['well'], ['rest house', 'cabin', 'guest house'],
+  ['train', 'railway', 'station'], ['petrol', 'gas station', 'pump'], ['cinema', 'drive-in', 'theatre', 'theater'],
+  ['hospital'], ['flat', 'apartment', 'landlord', 'neighbour', 'neighbor', 'room 4b'], ['mela', 'fairground', 'amusement'],
+  ['library'], ['elevator', 'lift'], ['mall', 'plaza'], ['hotel'], ['flight', 'plane'], ['scarecrow', 'cornfield', 'farm', 'field', 'orchard'],
+  ['forest', 'ranger', 'jungle', 'campground', 'camping'], ['road', 'gps', 'drive', 'highway', 'motorway', 'dhaba'],
+  ['cricket', 'ground', 'stadium'], ['wedding'], ['call centre', 'call center'], ['museum'], ['lighthouse'], ['cruise', 'ship'],
+  ['babysit'], ['workshop'], ['atm', 'bank'], ['parking'], ['school'], ['mountain', 'snow', 'cable car'], ['swamp'], ['desert'],
+];
+function themesOf(text) {
+  const t = ' ' + String(text || '').toLowerCase() + ' ';
+  return THEMES.filter(words => words.some(w => t.includes(w))).map(words => words[0]);
+}
+function recentThemes(n = 15) {
+  const set = new Set();
+  for (const h of readHistory().slice(-n)) for (const th of themesOf(`${h.title} ${h.setting || ''}`)) set.add(th);
+  return set;
+}
+
 function buildPrompt(topic, sceneCount, fmt) {
   const past = readHistory().slice(-40).map(h => `- ${h.title}`).join('\n') || '- (none yet)';
   // Never reuse a setting from the last 40 stories, and sometimes let the writer invent a new one.
   const usedSettings = readHistory().slice(-40).map(h => h.setting).filter(Boolean);
-  const fresh = list => (list || []).filter(x => !usedSettings.includes(x));
+  const usedThemes = recentThemes(15);
+  const fresh = list => (list || []).filter(x => !usedSettings.includes(x) && !themesOf(x).some(th => usedThemes.has(th)));
   const first = (look.settingsHot && Math.random() < 0.75) ? look.settingsHot : look.settings;
   let options = fresh(first);
   if (!options.length) options = fresh([...(look.settingsHot || []), ...look.settings]);
@@ -30,7 +53,7 @@ function buildPrompt(topic, sceneCount, fmt) {
   const setting = topic || (invent ? '' : options[Math.floor(Math.random() * options.length)]);
   lastSetting = topic ? topic : (invent ? 'invented' : setting);
   const settingLine = invent
-    ? 'Invent a fresh, original setting yourself: an ordinary place real people know (not a famous landmark). It must be clearly different from every earlier story listed below.'
+    ? `Invent a fresh, original setting yourself: an ordinary place real people know (not a famous landmark). It must be clearly different from every earlier story listed below${usedThemes.size ? `, and must NOT be about any of these recently used places: ${[...usedThemes].join(', ')}` : ''}.`
     : setting;
   const short = sceneCount <= 10;
   // not every video has 5 rules, so the titles and stories do not all look the same
