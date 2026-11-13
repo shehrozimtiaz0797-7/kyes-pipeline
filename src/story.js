@@ -91,7 +91,7 @@ ${past}
 
 Return ONLY valid JSON in this exact shape:
 {
-  "title": "curiosity title under 70 characters. Use the form 'POV: <Person> Left ${rules} Rules About <Object>' about two times out of three (e.g. 'POV: Grandma Left ${rules} Rules About the Scarecrow', 'POV: The Landlord Left ${rules} Rules About Room 4B'); otherwise 'POV: <Place> Has ${rules} Rules. Never <action>'",
+  "title": "curiosity title under 70 characters. If the story is about something at home or in the family acting wrong (a pet, a parent, a phone, a neighbour, a reflection), use the form 'If Your <Thing> Ever <does the strange thing>... <COMMAND IN CAPITALS>' (e.g. 'If Your Dog Ever Stares at the Hallway at 3 AM... DON'T FOLLOW IT', 'If Your Mom Ever Says Goodnight Twice... LOCK YOUR DOOR'). Otherwise use the form 'POV: <Person> Left ${rules} Rules About <Object>' about two times out of three (e.g. 'POV: Grandma Left ${rules} Rules About the Scarecrow', 'POV: The Landlord Left ${rules} Rules About Room 4B'); otherwise 'POV: <Place> Has ${rules} Rules. Never <action>'",
   "description": "2 short sentences that tease the story without spoiling it, and say it is a fictional horror story",
   "tags": ["8 to 12 short tags"],
   "scenes": [ { "text": "...", "label": "", "image_prompt": "..." } ]
