@@ -20,6 +20,13 @@ module.exports = {
   // Outdoor and rural places got the most views so far (forest, scarecrow, amusement park), so these are picked more often.
   settingsHot: [
     // home / family triggers (the 'If Your X Ever...' format got 1-5M views on other US channels)
+    // Nov 2026 research: cat and exact-time triggers led the 'If Your X Ever...' Shorts (25k-200k views)
+    'your cat refuses to come inside after midnight and keeps staring at your bedroom window',
+    'your cat starts growling at your bed every night, and you find rules written inside its collar',
+    'your wall clock always stops at exactly 3:33 AM, and the house goes silent',
+    'every streetlight on your street goes dark except the one right outside your window',
+    'your alarm rings at 3:17 AM every night even though you never set it',
+    'your baby monitor starts picking up a second voice humming at night',
     'your dog starts staring at the dark hallway every night at 3 AM, and you find old rules about it taped inside the closet',
     'your mom says goodnight to you twice in one night, and you remember the rules she made you learn as a kid',
     'your cat starts sitting outside your bedroom door every night at exactly 3 AM',
