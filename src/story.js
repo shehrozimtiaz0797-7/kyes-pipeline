@@ -46,7 +46,7 @@ function buildPrompt(topic, sceneCount, fmt) {
   const usedSettings = readHistory().slice(-40).map(h => h.setting).filter(Boolean);
   const usedThemes = recentThemes(15);
   const fresh = list => (list || []).filter(x => !usedSettings.includes(x) && !themesOf(x).some(th => usedThemes.has(th)));
-  const first = (look.settingsHot && Math.random() < 0.75) ? look.settingsHot : look.settings;
+  const first = (look.settingsHot && Math.random() < 0.9) ? look.settingsHot : look.settings;
   let options = fresh(first);
   if (!options.length) options = fresh([...(look.settingsHot || []), ...look.settings]);
   const invent = !topic && (!options.length || Math.random() < 0.3);
@@ -91,7 +91,7 @@ ${past}
 
 Return ONLY valid JSON in this exact shape:
 {
-  "title": "curiosity title under 70 characters. If the story is about something at home or in the family acting wrong (a pet, a parent, a phone, a neighbour, a reflection), use the form 'If Your <Thing> Ever <does the strange thing>... <COMMAND IN CAPITALS>' (e.g. 'If Your Dog Ever Stares at the Hallway at 3 AM... DON'T FOLLOW IT', 'If Your Mom Ever Says Goodnight Twice... LOCK YOUR DOOR'). Otherwise use the form 'POV: <Person> Left ${rules} Rules About <Object>' about two times out of three (e.g. 'POV: Grandma Left ${rules} Rules About the Scarecrow', 'POV: The Landlord Left ${rules} Rules About Room 4B'); otherwise 'POV: <Place> Has ${rules} Rules. Never <action>'",
+  "title": "curiosity title under 70 characters, ALWAYS in the form 'If Your <Thing> Ever <does the strange thing>... <COMMAND IN CAPITALS>' (e.g. 'If Your Dog Ever Stares at the Hallway at 3 AM... DON'T FOLLOW IT', 'If Your Mom Ever Says Goodnight Twice... LOCK YOUR DOOR', 'If Your Grandma Ever Leaves Rules About the Scarecrow... FOLLOW EVERY ONE'). <Thing> is something familiar from the story: a pet, a parent, a roommate, a neighbour, a phone, a reflection, a landlord, a car. Never start the title with 'POV'.",
   "description": "2 short sentences that tease the story without spoiling it, and say it is a fictional horror story",
   "tags": ["8 to 12 short tags"],
   "scenes": [ { "text": "...", "label": "", "image_prompt": "..." } ]
