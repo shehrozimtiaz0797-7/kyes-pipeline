@@ -1,0 +1,440 @@
+[
+ {
+  "id": "ww2_axis",
+  "label": "AXIS POWERS",
+  "name": "the Axis powers in World War II",
+  "names": [
+   "Germany",
+   "Italy",
+   "Empire of Japan"
+  ],
+  "years": [
+   1930,
+   1938,
+   1945
+  ],
+  "peak": 1945,
+  "angles": [
+   "full"
+  ],
+  "story": "World War II, 1939 to 1945: Germany, Italy and Japan expand and then collapse",
+  "labels": {}
+ },
+ {
+  "id": "ww1_central",
+  "label": "CENTRAL POWERS",
+  "name": "the Central Powers in World War I",
+  "names": [
+   "Germany",
+   "Austria Hungary",
+   "German Empire",
+   "Austro-Hungarian Empire",
+   "Ottoman Empire",
+   "Bulgaria",
+   "Austria",
+   "Hungary",
+   "Ottoman Sultanate"
+  ],
+  "years": [
+   1900,
+   1914,
+   1920,
+   1930
+  ],
+  "peak": 1930,
+  "angles": [
+   "full"
+  ],
+  "story": "World War I, 1914 to 1918, and how it destroyed four empires",
+  "labels": {}
+ },
+ {
+  "id": "napoleon",
+  "label": "FRANCE",
+  "name": "France in the Napoleonic Wars",
+  "names": [
+   "France"
+  ],
+  "years": [
+   1783,
+   1800,
+   1815
+  ],
+  "peak": 1815,
+  "angles": [
+   "full"
+  ],
+  "story": "the Napoleonic Wars: Napoleon conquers Europe, invades Russia in 1812, falls at Waterloo in 1815",
+  "labels": {}
+ },
+ {
+  "id": "alexander",
+  "label": "ALEXANDER",
+  "name": "the wars of Alexander the Great",
+  "names": [
+   "Achaemenid Empire",
+   "Empire of Alexander",
+   "Seleucid Kingdom"
+  ],
+  "years": [
+   -500,
+   -400,
+   -323,
+   -300
+  ],
+  "peak": -300,
+  "angles": [
+   "full"
+  ],
+  "story": "Persia's huge empire, then Alexander conquers it (334 to 323 BC), then his generals fight over it",
+  "labels": {
+   "-500": "PERSIAN EMPIRE",
+   "-400": "PERSIAN EMPIRE",
+   "-323": "ALEXANDER'S EMPIRE",
+   "-300": "SELEUCID EMPIRE"
+  }
+ },
+ {
+  "id": "punic",
+  "label": "CARTHAGE",
+  "name": "Carthage in the Punic Wars",
+  "names": [
+   "Carthaginian Empire",
+   "Carthage"
+  ],
+  "years": [
+   -500,
+   -400,
+   -323,
+   -300,
+   -200
+  ],
+  "peak": -200,
+  "angles": [
+   "full"
+  ],
+  "story": "the Punic Wars between Rome and Carthage, Hannibal crossing the Alps, and Carthage destroyed in 146 BC",
+  "labels": {}
+ },
+ {
+  "id": "japan_war",
+  "label": "EMPIRE OF JAPAN",
+  "name": "the wars of Imperial Japan",
+  "names": [
+   "Imperial Japan",
+   "Empire of Japan",
+   "Japan (USA)",
+   "Japan"
+  ],
+  "years": [
+   1900,
+   1914,
+   1938,
+   1945,
+   1960
+  ],
+  "peak": 1960,
+  "angles": [
+   "full"
+  ],
+  "story": "Japan's wars from 1894 to 1945: China, Russia, Korea, Pearl Harbor, and defeat",
+  "labels": {
+   "1900": "EMPIRE OF JAPAN",
+   "1914": "EMPIRE OF JAPAN",
+   "1938": "EMPIRE OF JAPAN",
+   "1945": "JAPAN",
+   "1960": "JAPAN"
+  }
+ },
+ {
+  "id": "timur",
+  "label": "TIMURID EMPIRE",
+  "name": "the conquests of Timur (Tamerlane)",
+  "names": [
+   "Chagatai Khanate",
+   "Timurid Empire",
+   "Timurid Emirates"
+  ],
+  "years": [
+   1300,
+   1400,
+   1500
+  ],
+  "peak": 1500,
+  "angles": [
+   "full"
+  ],
+  "story": "Timur's campaigns from 1370 to 1405: Persia, Delhi, Baghdad, Ankara",
+  "labels": {}
+ },
+ {
+  "id": "aztec",
+  "label": "AZTEC EMPIRE",
+  "name": "the Spanish conquest of the Aztec Empire",
+  "names": [
+   "Aztec Empire",
+   "Viceroyalty of New Spain"
+  ],
+  "years": [
+   1500,
+   1530,
+   1600
+  ],
+  "peak": 1600,
+  "angles": [
+   "full"
+  ],
+  "story": "Cortes and the fall of Tenochtitlan in 1521",
+  "labels": {
+   "1500": "AZTEC EMPIRE",
+   "1530": "NEW SPAIN",
+   "1600": "NEW SPAIN"
+  }
+ },
+ {
+  "id": "reconquista",
+  "label": "AL-ANDALUS",
+  "name": "the Reconquista in Spain",
+  "names": [
+   "Caliphate of Córdoba",
+   "Almoravid dynasty",
+   "Almohad Caliphate",
+   "Granada"
+  ],
+  "years": [
+   1000,
+   1100,
+   1200,
+   1300,
+   1400
+  ],
+  "peak": 1400,
+  "angles": [
+   "full"
+  ],
+  "story": "700 years of war in Iberia, ending with the fall of Granada in 1492",
+  "labels": {
+   "1000": "CALIPHATE OF CORDOBA",
+   "1100": "ALMORAVIDS",
+   "1200": "ALMOHADS",
+   "1300": "EMIRATE OF GRANADA",
+   "1400": "EMIRATE OF GRANADA"
+  }
+ },
+ {
+  "id": "mexican_american",
+  "label": "MEXICO",
+  "name": "Mexico in the Mexican-American War",
+  "names": [
+   "Viceroyalty of New Spain",
+   "Mexico"
+  ],
+  "years": [
+   1783,
+   1815,
+   1880,
+   1960
+  ],
+  "peak": 1960,
+  "angles": [
+   "full"
+  ],
+  "story": "how Mexico lost half its land: Texas 1836 and the war of 1846 to 1848",
+  "labels": {
+   "1783": "NEW SPAIN",
+   "1815": "NEW SPAIN",
+   "1880": "MEXICO",
+   "1960": "MEXICO"
+  }
+ },
+ {
+  "id": "hundred_years",
+  "label": "ENGLAND IN FRANCE",
+  "name": "the Hundred Years' War",
+  "names": [
+   "English territory",
+   "England"
+  ],
+  "years": [
+   1279,
+   1300,
+   1400,
+   1492
+  ],
+  "peak": 1492,
+  "angles": [
+   "full"
+  ],
+  "story": "England and France at war from 1337 to 1453: Crecy, Agincourt, Joan of Arc",
+  "labels": {
+   "1279": "ENGLISH LANDS",
+   "1300": "ENGLISH LANDS",
+   "1400": "ENGLISH LANDS",
+   "1492": "ENGLAND"
+  }
+ },
+ {
+  "id": "ptolemaic",
+  "label": "PTOLEMAIC EGYPT",
+  "name": "Ptolemaic Egypt and its wars",
+  "names": [
+   "Ptolemaic Kingdom"
+  ],
+  "years": [
+   -300,
+   -200,
+   -100
+  ],
+  "peak": -100,
+  "angles": [
+   "full"
+  ],
+  "story": "the Syrian Wars against the Seleucids and the end with Cleopatra and Rome in 30 BC",
+  "labels": {}
+ },
+ {
+  "id": "golden_horde",
+  "label": "GOLDEN HORDE",
+  "name": "the Golden Horde and the wars of Russia",
+  "names": [
+   "Khanate of the Golden Horde",
+   "Golden Horde"
+  ],
+  "years": [
+   1279,
+   1300,
+   1492,
+   1500
+  ],
+  "peak": 1500,
+  "angles": [
+   "full"
+  ],
+  "story": "the Mongol rule over Russia and how Moscow broke free (Kulikovo 1380, Ugra 1480)",
+  "labels": {}
+ },
+ {
+  "id": "mamluk",
+  "label": "MAMLUK SULTANATE",
+  "name": "the Mamluks against the Mongols and Crusaders",
+  "names": [
+   "Mamluke Sultanate"
+  ],
+  "years": [
+   1279,
+   1300,
+   1400,
+   1500
+  ],
+  "peak": 1500,
+  "angles": [
+   "full"
+  ],
+  "story": "Ain Jalut 1260, the end of the Crusader states in 1291, and the Ottoman conquest in 1517",
+  "labels": {}
+ },
+ {
+  "id": "ghaznavi",
+  "label": "GHAZNAVID EMPIRE",
+  "name": "the campaigns of Mahmud of Ghazni",
+  "names": [
+   "Ghaznavid Emirate"
+  ],
+  "years": [
+   1000,
+   1100,
+   1200
+  ],
+  "peak": 1200,
+  "angles": [
+   "full"
+  ],
+  "story": "Mahmud of Ghazni's raids into India (1000 to 1027) and the empire's fall to the Ghurids",
+  "labels": {}
+ },
+ {
+  "id": "maratha",
+  "label": "MARATHA CONFEDERACY",
+  "name": "the Anglo-Maratha Wars",
+  "names": [
+   "Maratha",
+   "Maratha Confederacy"
+  ],
+  "years": [
+   1715,
+   1783,
+   1800,
+   1815
+  ],
+  "peak": 1815,
+  "angles": [
+   "full"
+  ],
+  "story": "the Marathas, Panipat 1761, and three wars with the British ending in 1818",
+  "labels": {
+   "1715": "MARATHAS",
+   "1783": "MARATHA CONFEDERACY",
+   "1800": "MARATHA CONFEDERACY",
+   "1815": "MARATHA CONFEDERACY"
+  }
+ },
+ {
+  "id": "seleucid",
+  "label": "SELEUCID EMPIRE",
+  "name": "the wars of the Seleucid Empire",
+  "names": [
+   "Seleucid Kingdom"
+  ],
+  "years": [
+   -300,
+   -200,
+   -100
+  ],
+  "peak": -100,
+  "angles": [
+   "full"
+  ],
+  "story": "Alexander's biggest successor state, beaten by Rome at Magnesia in 190 BC and slowly broken",
+  "labels": {}
+ },
+ {
+  "id": "maurya_kalinga",
+  "label": "MAURYAN EMPIRE",
+  "name": "the Mauryan Empire and the Kalinga War",
+  "names": [
+   "Mauryan Empire"
+  ],
+  "years": [
+   -300,
+   -200,
+   -100
+  ],
+  "peak": -100,
+  "angles": [
+   "full"
+  ],
+  "story": "Chandragupta, the Kalinga War of 261 BC that changed Ashoka, and the fall of the empire",
+  "labels": {}
+ },
+ {
+  "id": "vijayanagara",
+  "label": "VIJAYANAGARA",
+  "name": "the wars of the Vijayanagara Empire",
+  "names": [
+   "Vijayanagara"
+  ],
+  "years": [
+   1492,
+   1500,
+   1530,
+   1600,
+   1650
+  ],
+  "peak": 1650,
+  "angles": [
+   "full"
+  ],
+  "story": "South India's great empire and the Battle of Talikota in 1565",
+  "labels": {}
+ }
+]
