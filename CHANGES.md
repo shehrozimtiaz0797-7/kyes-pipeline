@@ -13,3 +13,4 @@
 
 ## 2026-11-15 (21:00 MY)
 - Owner request: same times as Empire Maps. 3 videos a day at 2:50am, 8:50am, 12:50pm Malaysia time (gate hours 02 08 12, only cron calls at :50). Needs one cron-job.org job: 50 02,08,12 * * * (Asia/Kuala_Lumpur); the old :45 jobs are ignored.
+- 23:25 MY: the 22:50 AI Wala slot was missed because cron-job.org still called at :45 (the gate only took :50). The gate now takes any call in the slot hour and skips if history.json was updated in the last hour, so :45 + :50 calls can never make two videos.

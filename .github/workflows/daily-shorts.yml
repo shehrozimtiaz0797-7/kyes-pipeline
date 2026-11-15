@@ -29,13 +29,18 @@ jobs:
     outputs:
       go: ${{ steps.slot.outputs.go }}
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 20
       - id: slot
         run: |
           H=$(TZ=Asia/Kuala_Lumpur date -d '-20 min' +%H)
           GO=0
-          M=$(TZ=Asia/Kuala_Lumpur date +%M); M=$((10#$M))
-          # only the :50 calls (same times as Empire Maps); old :45 calls are ignored so nothing runs twice
-          for S in 02 08 12; do [ "$H" = "$S" ] && { [ $M -ge 48 ] || [ $M -lt 30 ]; } && GO=1; done
+          for S in 02 08 12; do [ "$H" = "$S" ] && GO=1; done
+          # cron-job.org may call at :45 and/or :50: if a video was already made in the last hour, skip (no doubles)
+          LAST=$(git log -1 --format=%ct -- history.json 2>/dev/null || echo 0)
+          AGE=$(( $(date +%s) - ${LAST:-0} ))
+          if [ "$GO" = "1" ] && [ "$AGE" -lt 3600 ]; then echo "a video was made $AGE s ago, skipping"; GO=0; fi
           [ "${{ inputs.force }}" = "true" ] && GO=1
           echo "slot hour $H -> go=$GO"
           echo "go=$GO" >> "$GITHUB_OUTPUT"
