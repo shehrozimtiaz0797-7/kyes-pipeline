@@ -22,8 +22,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # 3 videos a day. cron-job.org may still call more often; runs outside
-  # these Malaysia-time slots (12:45am, 2:45am, 4:45am) stop here in a few seconds.
+  # 3 videos a day at the Empire Maps times (2:50am, 8:50am, 12:50pm Malaysia). cron-job.org calls at :50;
+  # any other call stops here in a few seconds.
   gate:
     runs-on: ubuntu-latest
     outputs:
@@ -33,7 +33,9 @@ jobs:
         run: |
           H=$(TZ=Asia/Kuala_Lumpur date -d '-20 min' +%H)
           GO=0
-          for S in 00 02 04; do [ "$H" = "$S" ] && GO=1; done
+          M=$(TZ=Asia/Kuala_Lumpur date +%M); M=$((10#$M))
+          # only the :50 calls (same times as Empire Maps); old :45 calls are ignored so nothing runs twice
+          for S in 02 08 12; do [ "$H" = "$S" ] && { [ $M -ge 48 ] || [ $M -lt 30 ]; } && GO=1; done
           [ "${{ inputs.force }}" = "true" ] && GO=1
           echo "slot hour $H -> go=$GO"
           echo "go=$GO" >> "$GITHUB_OUTPUT"

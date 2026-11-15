@@ -10,3 +10,6 @@
 
 ## 2026-11-14 (23:00 MY) - trend research
 - Added 6 home triggers (cat, exact time like 3:33 AM, streetlights, alarm, baby monitor). The top 'If Your X Ever...' Shorts from 4-14 Nov were about cats and exact clock times (18k-196k views).
+
+## 2026-11-15 (21:00 MY)
+- Owner request: same times as Empire Maps. 3 videos a day at 2:50am, 8:50am, 12:50pm Malaysia time (gate hours 02 08 12, only cron calls at :50). Needs one cron-job.org job: 50 02,08,12 * * * (Asia/Kuala_Lumpur); the old :45 jobs are ignored.
