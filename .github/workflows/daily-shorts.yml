@@ -104,6 +104,7 @@ jobs:
           sed -i 's/const text = script.lines.map/const text = (script.speak || script.lines).map/' src/voice.js
           sed -i "s/'en',/(process.env.YT_LANG || 'en'),/g" src/youtube.js
           grep -q 'os.environ.get("BRAND"' src/render.py && grep -q 'OUTRO_SUB' src/render.py && grep -q 'topic.get("labels")' src/render.py && grep -q 'script.speak' src/voice.js && grep -q 'YT_LANG' src/youtube.js
+          python3 ../maps/theme.py src/render.py war
       - name: Keep the border maps between runs
         uses: actions/cache@v4
         with:
