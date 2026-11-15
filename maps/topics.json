@@ -1,26 +1,5 @@
 [
  {
-  "id": "ww2_axis",
-  "label": "AXIS POWERS",
-  "name": "the Axis powers in World War II",
-  "names": [
-   "Germany",
-   "Italy",
-   "Empire of Japan"
-  ],
-  "years": [
-   1930,
-   1938,
-   1945
-  ],
-  "peak": 1945,
-  "angles": [
-   "full"
-  ],
-  "story": "World War II, 1939 to 1945: Germany, Italy and Japan expand and then collapse",
-  "labels": {}
- },
- {
   "id": "ww1_central",
   "label": "CENTRAL POWERS",
   "name": "the Central Powers in World War I",
@@ -46,25 +25,6 @@
    "full"
   ],
   "story": "World War I, 1914 to 1918, and how it destroyed four empires",
-  "labels": {}
- },
- {
-  "id": "napoleon",
-  "label": "FRANCE",
-  "name": "France in the Napoleonic Wars",
-  "names": [
-   "France"
-  ],
-  "years": [
-   1783,
-   1800,
-   1815
-  ],
-  "peak": 1815,
-  "angles": [
-   "full"
-  ],
-  "story": "the Napoleonic Wars: Napoleon conquers Europe, invades Russia in 1812, falls at Waterloo in 1815",
   "labels": {}
  },
  {
@@ -114,6 +74,25 @@
    "full"
   ],
   "story": "the Punic Wars between Rome and Carthage, Hannibal crossing the Alps, and Carthage destroyed in 146 BC",
+  "labels": {}
+ },
+ {
+  "id": "napoleon",
+  "label": "FRANCE",
+  "name": "France in the Napoleonic Wars",
+  "names": [
+   "France"
+  ],
+  "years": [
+   1783,
+   1800,
+   1815
+  ],
+  "peak": 1815,
+  "angles": [
+   "full"
+  ],
+  "story": "the Napoleonic Wars: Napoleon conquers Europe, invades Russia in 1812, falls at Waterloo in 1815",
   "labels": {}
  },
  {
@@ -274,25 +253,6 @@
   }
  },
  {
-  "id": "ptolemaic",
-  "label": "PTOLEMAIC EGYPT",
-  "name": "Ptolemaic Egypt and its wars",
-  "names": [
-   "Ptolemaic Kingdom"
-  ],
-  "years": [
-   -300,
-   -200,
-   -100
-  ],
-  "peak": -100,
-  "angles": [
-   "full"
-  ],
-  "story": "the Syrian Wars against the Seleucids and the end with Cleopatra and Rome in 30 BC",
-  "labels": {}
- },
- {
   "id": "golden_horde",
   "label": "GOLDEN HORDE",
   "name": "the Golden Horde and the wars of Russia",
@@ -377,6 +337,25 @@
    "1800": "MARATHA CONFEDERACY",
    "1815": "MARATHA CONFEDERACY"
   }
+ },
+ {
+  "id": "ptolemaic",
+  "label": "PTOLEMAIC EGYPT",
+  "name": "Ptolemaic Egypt and its wars",
+  "names": [
+   "Ptolemaic Kingdom"
+  ],
+  "years": [
+   -300,
+   -200,
+   -100
+  ],
+  "peak": -100,
+  "angles": [
+   "full"
+  ],
+  "story": "the Syrian Wars against the Seleucids and the end with Cleopatra and Rome in 30 BC",
+  "labels": {}
  },
  {
   "id": "seleucid",

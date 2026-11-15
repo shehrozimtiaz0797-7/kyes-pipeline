@@ -56,7 +56,7 @@ Topic: how ${t.name} got its borders: ${t.story}.
 The video shows the borders of ${t.name} on a map at these snapshot years, one after another: ${ys}. (The map data only has these years; a line may name the real year of an event that happened between the previous snapshot and its own snapshot year.)
 
 Write:
-- "lines": exactly ${n + 1} narration lines in ROMAN URDU (Urdu written in English letters, the way people type on WhatsApp, e.g. "1947 mein ek naya mulk bana: Pakistan."). These are the on-screen captions.
+- "lines": exactly ${n + 1} narration lines in ROMAN URDU. Line 1 (the hook) is shown with the map of ${yearText(p.years[0])}; ${p.years.slice(1).map((y, i) => `line ${i + 2} with the map of ${yearText(y)}`).join('; ')}; the last line is the closing line on the final map. So line 2 must talk about ${yearText(p.years[1] ?? p.years[0])} (or an event just before it), line 3 about ${yearText(p.years[2] ?? p.years[p.years.length - 1])}, and so on (Urdu written in English letters, the way people type on WhatsApp, e.g. "1947 mein ek naya mulk bana: Pakistan."). These are the on-screen captions.
   * Line 1 is the hook: surprise, contrast or a question that makes people stay, e.g. "Kya aap jante hain, 1880 mein Pakistan naam ka koi mulk nahi tha?"
   * Each middle line starts with a year ("1880 mein ...", "1947 tak ...") and says what changed on the map: wars, treaties, independence, partition, who took what. Name real places and real people.
   * The last line lands the story in one strong sentence, then asks the viewer a question for the comments.
@@ -76,7 +76,7 @@ War of this video: ${t.name}: ${t.story}.
 The video shows the territory of ${t.label} on a map at these snapshot years, one after another: ${ys}. (The map data only has these years; a line may name the real year of a battle or event that happened between the previous snapshot and its own snapshot year.)
 
 Write:
-- "lines": exactly ${n + 1} narration lines. Line 1 goes with the map of ${yearText(p.years[0])}, line 2 with ${yearText(p.years[1] ?? p.years[0])}, and so on; the LAST line is extra and goes with the final map.
+- "lines": exactly ${n + 1} narration lines. Line 1 (the hook) is shown with the map of ${yearText(p.years[0])}; ${p.years.slice(1).map((y, i) => `line ${i + 2} with the map of ${yearText(y)}`).join('; ')}; the LAST line is the closing line on the final map. Each middle line must talk about its own map's year (or a battle just before it).
   * Line 1 is the hook: tension, surprise or a question that makes people stay, e.g. "In 1938, Germany was about to start the deadliest war in history."
   * Each middle line starts with a year ("In 1941, ...", "By 1944, ...") and tells the war like a thriller: the big battles, invasions, turning points and who won. Name real battles, places and commanders.
   * The last line lands the story in one strong sentence, then asks the viewer a question to answer in the comments.

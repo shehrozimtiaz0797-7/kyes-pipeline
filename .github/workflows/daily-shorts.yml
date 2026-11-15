@@ -64,6 +64,7 @@ jobs:
       MAP_KIND: wars-en
       CHANNEL_NAME: "War Maps"
       BRAND: "WAR MAPS"
+      OUTRO_SUB: "Tell me in the comments"
       OUTRO: "WHICH WAR NEXT?"
       GEMINI_TEXT_MODEL: gemini-3.8-flash
       GEMINI_TTS_MODEL: gemini-3.8-flash-tts
@@ -98,11 +99,11 @@ jobs:
           rm -f engine/history.json
           [ -f history.json ] && cp history.json engine/history.json
           cd engine
-          sed -i 's/"EMPIRE MAPS"/os.environ.get("BRAND", "EMPIRE MAPS")/; s/"WHICH EMPIRE NEXT?"/os.environ.get("OUTRO", "WHICH EMPIRE NEXT?")/' src/render.py
+          sed -i 's/"EMPIRE MAPS"/os.environ.get("BRAND", "EMPIRE MAPS")/; s/"WHICH EMPIRE NEXT?"/os.environ.get("OUTRO", "WHICH EMPIRE NEXT?")/; s/"Tell me in the comments"/os.environ.get("OUTRO_SUB", "Tell me in the comments")/' src/render.py
           sed -i 's/            lab = topic\["label"\]/            lab = (topic.get("labels") or {}).get(str(y_now), topic["label"])/' src/render.py
           sed -i 's/const text = script.lines.map/const text = (script.speak || script.lines).map/' src/voice.js
           sed -i "s/'en',/(process.env.YT_LANG || 'en'),/g" src/youtube.js
-          grep -q 'os.environ.get("BRAND"' src/render.py && grep -q 'topic.get("labels")' src/render.py && grep -q 'script.speak' src/voice.js && grep -q 'YT_LANG' src/youtube.js
+          grep -q 'os.environ.get("BRAND"' src/render.py && grep -q 'OUTRO_SUB' src/render.py && grep -q 'topic.get("labels")' src/render.py && grep -q 'script.speak' src/voice.js && grep -q 'YT_LANG' src/youtube.js
       - name: Keep the border maps between runs
         uses: actions/cache@v4
         with:
