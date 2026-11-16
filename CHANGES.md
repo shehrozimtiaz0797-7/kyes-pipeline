@@ -19,3 +19,4 @@
 - KYES is now a map channel: "wars on the map", English (brand WAR MAPS). Uses the Empire Maps engine pinned at 2b676f2 + maps/topics.json + maps/script.js. Old horror code is kept but not used. Same slots (2:50am, 8:50am, 12:50pm MY). Horror videos stopped (0-5 views each). Videos already on the channel are not touched.
 - 00:50 MY: own colours for this channel (maps/theme.py, theme 'war') so it does not look like Empire Maps.
 - 16 Nov 11:30 MY: War Maps slots changed on owner request: calls at 21:50, 23:50, 01:50 MY so videos are live about 10pm, 12am, 2am. cron-job.org: 50 21,23,1 * * *
+- 16 Nov 18:30 MY: added long videos (8-12 min illustrated war documentaries): long/make-long.js, long/longtools.py, workflow long-video.yml (manual start; upload off by default). Shorts are not changed.

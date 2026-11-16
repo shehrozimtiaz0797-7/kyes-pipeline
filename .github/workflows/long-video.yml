@@ -1,0 +1,106 @@
+name: War Maps long video (8-12 min documentary)
+
+on:
+  # Started by hand from the Actions tab (or later by cron-job.org, about 2 a week).
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: "Optional topic id from maps/topics.json (empty = next one not made yet)"
+        required: false
+        default: ""
+      upload:
+        description: "Upload to YouTube (off = test only, preview goes to the qa-long branch)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kyes-long
+  cancel-in-progress: false
+
+jobs:
+  make-long:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      TZ: Asia/Kuala_Lumpur
+      FFMPEG_PATH: ffmpeg
+      PYTHON: python
+      PRIVACY: public
+      YT_CATEGORY: "27"
+      BRAND: "WAR MAPS"
+      GEMINI_TEXT_MODEL: gemini-3.8-flash
+      GEMINI_TTS_MODEL: gemini-3.8-flash-tts
+      LONG_VOICE: Charon
+      LONG_VOICE_CHUNKS: "4"
+      ENGINE_SHA: 2b676f22080b83d1a3a6e84d693d1c17fd3a44b5
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+      CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      CF_ACCOUNT_ID_2: ${{ secrets.CF_ACCOUNT_ID_2 }}
+      CF_API_TOKEN_2: ${{ secrets.CF_API_TOKEN_2 }}
+      YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+      YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+      YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg > /dev/null
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q pillow numpy
+      - name: Get the map engine and add the long-video files
+        run: |
+          git clone -q https://github.com/shehrozimtiaz0797-7/empire-maps-pipeline engine
+          git -C engine checkout -q "$ENGINE_SHA"
+          cp maps/topics.json engine/topics.json
+          mkdir -p engine/long && cp long/make-long.js long/longtools.py engine/long/
+          [ -f long-history.json ] && cp long-history.json engine/long-history.json || true
+      - name: Keep the border maps between runs
+        uses: actions/cache@v4
+        with:
+          path: engine/data
+          key: borders-v1
+      - name: Make the long video
+        working-directory: engine
+        env:
+          TOPIC: ${{ inputs.topic }}
+          DO_UPLOAD: ${{ inputs.upload }}
+        run: |
+          set --
+          if [ -n "$TOPIC" ]; then set -- "$@" --topic "$TOPIC"; fi
+          if [ "$DO_UPLOAD" != "true" ]; then set -- "$@" --no-upload; fi
+          node long/make-long.js "$@" 2>&1 | tee long.log
+          exit ${PIPESTATUS[0]}
+      - name: Save history
+        if: success() && inputs.upload
+        run: |
+          cp engine/long-history.json long-history.json
+          git config user.name "maps-bot"
+          git config user.email "maps-bot@users.noreply.github.com"
+          git add long-history.json
+          git commit -m "Long video history $(date +'%Y-%m-%d %H:%M')" || true
+          git pull --rebase || true
+          git push || true
+      - name: Save a preview for checking (qa-long branch)
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          D=$(ls -d engine/output/long-*/ 2>/dev/null | tail -1)
+          mkdir -p /tmp/qa
+          cp engine/long.log /tmp/qa/ 2>/dev/null || true
+          if [ -n "$D" ]; then cp "$D/preview.mp4" "$D/thumb.jpg" "$D/script.json" "$D/long.json" /tmp/qa/ 2>/dev/null || true; ls "$D"/img0*.jpg 2>/dev/null | head -4 | xargs -r -I{} cp {} /tmp/qa/; fi
+          cd /tmp/qa
+          git init -q -b qa-long
+          git add .
+          git -c user.name=maps-bot -c user.email=maps-bot@users.noreply.github.com commit -qm "long preview $(date +'%Y-%m-%d %H:%M')"
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" qa-long || echo "could not save preview"
