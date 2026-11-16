@@ -1,0 +1,385 @@
+{
+ "topic": {
+  "names": [
+   "Carthaginian Empire",
+   "Carthage"
+  ],
+  "years": [
+   -500,
+   -400,
+   -323,
+   -300,
+   -200
+  ],
+  "label": "CARTHAGE",
+  "labels": {}
+ },
+ "theme": "war",
+ "brand": "WAR MAPS",
+ "timeline": [
+  {
+   "kind": "title",
+   "dur": 5
+  },
+  {
+   "kind": "map",
+   "dur": 4,
+   "heading": "The Ash of Carthage",
+   "chapter": 1,
+   "year": -200
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img001.jpg",
+   "dur": 7.827715558228418
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img002.jpg",
+   "dur": 11.827715558228418
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img003.jpg",
+   "dur": 10.856524837904677
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img004.jpg",
+   "dur": 10.856524837904677
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img005.jpg",
+   "dur": 11.307434815197842
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img006.jpg",
+   "dur": 11.307434815197842
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img007.jpg",
+   "dur": 8.012323442670864
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img008.jpg",
+   "dur": 8.012323442670864
+  },
+  {
+   "kind": "map",
+   "dur": 4,
+   "heading": "Masters of the Mediterranean",
+   "chapter": 2,
+   "year": -500
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img009.jpg",
+   "dur": 7.134007900854316
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img010.jpg",
+   "dur": 11.134007900854316
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img011.jpg",
+   "dur": 12.452052449865109
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img012.jpg",
+   "dur": 12.452052449865109
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img013.jpg",
+   "dur": 11.550232495278777
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img014.jpg",
+   "dur": 11.550232495278777
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img015.jpg",
+   "dur": 11.385041463362068
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img016.jpg",
+   "dur": 11.385041463362068
+  },
+  {
+   "kind": "map",
+   "dur": 4,
+   "heading": "The First Punic War",
+   "chapter": 3,
+   "year": -300
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img017.jpg",
+   "dur": 7.385041463362068
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img018.jpg",
+   "dur": 11.385041463362068
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img019.jpg",
+   "dur": 11.21254083512931
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img020.jpg",
+   "dur": 11.21254083512931
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img021.jpg",
+   "dur": 12.040543850646552
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img022.jpg",
+   "dur": 12.040543850646552
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img023.jpg",
+   "dur": 11.419541589008618
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img024.jpg",
+   "dur": 11.419541589008618
+  },
+  {
+   "kind": "map",
+   "dur": 4,
+   "heading": "The March Across the Alps",
+   "chapter": 4,
+   "year": -200
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img025.jpg",
+   "dur": 7.83354309676724
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img026.jpg",
+   "dur": 11.83354309676724
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img027.jpg",
+   "dur": 10.764039201724136
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img028.jpg",
+   "dur": 10.764039201724136
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img029.jpg",
+   "dur": 10.665532126187246
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img030.jpg",
+   "dur": 10.665532126187246
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img031.jpg",
+   "dur": 10.15603218385346
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img032.jpg",
+   "dur": 10.15603218385346
+  },
+  {
+   "kind": "map",
+   "dur": 4,
+   "heading": "The Masterpiece at Cannae",
+   "chapter": 5,
+   "year": -200
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img033.jpg",
+   "dur": 7.548665359565806
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img034.jpg",
+   "dur": 11.548665359565806
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img035.jpg",
+   "dur": 9.918265544097693
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img036.jpg",
+   "dur": 9.918265544097693
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img037.jpg",
+   "dur": 10.631565463364993
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img038.jpg",
+   "dur": 10.631565463364993
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img039.jpg",
+   "dur": 10.189998846675712
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img040.jpg",
+   "dur": 10.189998846675712
+  },
+  {
+   "kind": "map",
+   "dur": 4,
+   "heading": "The Fall of the Lion of Carthage",
+   "chapter": 6,
+   "year": -200
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img041.jpg",
+   "dur": 7.990231976255089
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img042.jpg",
+   "dur": 11.990231976255089
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img043.jpg",
+   "dur": 9.95306893680615
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img044.jpg",
+   "dur": 9.95306893680615
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img045.jpg",
+   "dur": 10.74931445175064
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img046.jpg",
+   "dur": 10.74931445175064
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img047.jpg",
+   "dur": 10.74931445175064
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img048.jpg",
+   "dur": 10.74931445175064
+  },
+  {
+   "kind": "map",
+   "dur": 4,
+   "heading": "Erased from the Earth",
+   "chapter": 7,
+   "year": -200
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img049.jpg",
+   "dur": 7.313321691502988
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img050.jpg",
+   "dur": 11.313321691502988
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img051.jpg",
+   "dur": 10.517076176558497
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img052.jpg",
+   "dur": 10.517076176558497
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img053.jpg",
+   "dur": 11.34649858795901
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img054.jpg",
+   "dur": 11.34649858795901
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img055.jpg",
+   "dur": 13.071697203672075
+  },
+  {
+   "kind": "img",
+   "img": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/img056.jpg",
+   "dur": 13.071697203672075
+  },
+  {
+   "kind": "outro",
+   "dur": 4
+  }
+ ],
+ "voice": [
+  {
+   "file": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/voice1.wav",
+   "start": 5
+  },
+  {
+   "file": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/voice2.wav",
+   "start": 159.280583
+  },
+  {
+   "file": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/voice3.wav",
+   "start": 319.361166
+  },
+  {
+   "file": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/voice4.wav",
+   "start": 469.561749
+  }
+ ],
+ "total": 628.9623320000001,
+ "data_dir": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/data",
+ "out": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/final.mp4",
+ "title": "How Rome Destroyed Carthage: The Complete Punic Wars",
+ "preview": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/preview.mp4",
+ "thumb": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic/thumb.jpg",
+ "thumb_text": "CARTHAGE MUST FALL",
+ "ffmpeg": "ffmpeg",
+ "work": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/long-2026-11-16-10-08-punic"
+}
