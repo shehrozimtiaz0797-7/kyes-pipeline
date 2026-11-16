@@ -21,3 +21,4 @@
 - 16 Nov 11:30 MY: War Maps slots changed on owner request: calls at 21:50, 23:50, 01:50 MY so videos are live about 10pm, 12am, 2am. cron-job.org: 50 21,23,1 * * *
 - 16 Nov 18:30 MY: added long videos (8-12 min illustrated war documentaries): long/make-long.js, long/longtools.py, workflow long-video.yml (manual start; upload off by default). Shorts are not changed.
 - 16 Nov 19:10 MY: long videos now have burned-in captions timed to the voice (faster-whisper word times aligned to the script; words light up as spoken).
+- 17 Nov 01:30 MY: long videos cancelled on owner request; long-video.yml workflow disabled (files kept, nothing runs). Shorts only.
