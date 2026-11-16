@@ -16,7 +16,7 @@ const HIST = path.join(ROOT, 'long-history.json');
 const readHist = () => { try { return JSON.parse(fs.readFileSync(HIST, 'utf8')); } catch (_) { return []; } };
 const yearText = y => (y < 0 ? `${-y} BC` : y < 1000 ? `${y} AD` : String(y));
 
-const STYLE = 'detailed hand-painted historical illustration in the style of a medieval tapestry and an old oil painting, warm muted earth colours, parchment texture, cinematic wide composition, no text, no letters';
+const STYLE = 'detailed hand-painted historical illustration in the style of a medieval tapestry and an old oil painting, warm muted earth colours, parchment texture, cinematic wide composition, period-accurate, no modern objects, no vehicles, no text, no letters, no maps';
 const SAFE = [[/\b(blood\w*|gor(e|y)|kill\w*|murder\w*|corpse\w*|dead|death|die[sd]?|wound\w*|massacre\w*|slaughter\w*|behead\w*)\b/gi, ''],
   [/\b(gun\w*|knife|knives|weapon\w*)\b/gi, 'equipment'], [/\bbod(y|ies)\b/gi, 'figures']];
 const soften = t => SAFE.reduce((s, [re, r]) => s.replace(re, r), String(t)).replace(/\s{2,}/g, ' ');
@@ -42,7 +42,7 @@ Return ONLY JSON:
  "tags": [12 to 15 search tags],
  "chapters": [6 to 8 objects: {"heading": "short chapter name", "map_year": one of the snapshot years above that fits this chapter (number, negative for BC), "paragraphs": [3 to 5 objects: {"text": "40 to 70 words of narration", "images": ["scene for the first half of this paragraph", "scene for the second half"]}]}]}
 
-Image scene rules: each is one English sentence describing a painting: who, where, what is happening, period clothing and armour, setting, light. Show armies marching, commanders, cities, ships, councils, maps on tables, landscapes. No gore, nothing bloody, no close-up injuries, no text. Each scene must be different.
+Image scene rules: each is one English sentence describing a painting: who, where, what is happening, period clothing and armour, setting, light. Show armies marching, commanders, cities, ships, councils, landscapes. Everything must fit the exact period and place (clothing, armour, buildings); no modern objects, no maps, no writing. No gore, nothing bloody, no close-up injuries, no text. Each scene must be different.
 Facts: only well-known, true history. No invented numbers or quotes. Neutral tone about every people and religion.`;
 }
 
