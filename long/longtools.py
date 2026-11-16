@@ -211,6 +211,123 @@ open(lst, "w").write("".join(f"file '{s}'\n" for s in segs))
 silent = os.path.join(WORK, "_video.mp4")
 sh([FF, "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", silent])
 
+
+# ---------- captions: script words timed by speech recognition, highlighted as they are spoken ----------
+import re
+from difflib import SequenceMatcher
+
+
+def norm(w):
+    return re.sub(r"[^a-z0-9]", "", w.lower())
+
+
+def timed_words(v):
+    """Word timings for one voice chunk, with the script's spelling."""
+    words = v["text"].split()
+    whis = []
+    try:
+        from faster_whisper import WhisperModel
+        global _WM
+        try:
+            _WM
+        except NameError:
+            _WM = WhisperModel(os.environ.get("WHISPER_MODEL", "base.en"), device="cpu", compute_type="int8")
+        segs, _ = _WM.transcribe(v["file"], language="en", word_timestamps=True, vad_filter=False, beam_size=1)
+        for sg in segs:
+            for w in sg.words or []:
+                whis.append((norm(w.word), float(w.start), float(w.end)))
+    except Exception as e:  # no recogniser: spread the words over the chunk by length
+        print("word timing fallback:", e, flush=True)
+    off = float(v["start"])
+    dur = float(v.get("dur") or 0)
+    times = [None] * len(words)
+    if whis:
+        a = [norm(w) for w in words]
+        b = [w[0] for w in whis]
+        for blk in SequenceMatcher(None, a, b, autojunk=False).get_matching_blocks():
+            for k in range(blk.size):
+                times[blk.a + k] = (whis[blk.b + k][1], whis[blk.b + k][2])
+        if not dur:
+            dur = whis[-1][2] + 0.3
+    if not dur:
+        dur = sum(len(w) for w in words) * 0.065
+    # fill words that were not matched: between their matched neighbours, by length
+    known = [i for i, t in enumerate(times) if t]
+    if not known:
+        tot = sum(len(w) + 1 for w in words)
+        t0 = 0.0
+        for i, w in enumerate(words):
+            d = dur * (len(w) + 1) / tot
+            times[i] = (t0, t0 + d * 0.9)
+            t0 += d
+    else:
+        i = 0
+        while i < len(words):
+            if times[i]:
+                i += 1
+                continue
+            j = i
+            while j < len(words) and not times[j]:
+                j += 1
+            lo = times[i - 1][1] if i > 0 else 0.0
+            hi = times[j][0] if j < len(words) else dur
+            span = max(0.05, hi - lo)
+            tot = sum(len(words[k]) + 1 for k in range(i, j))
+            t0 = lo
+            for k in range(i, j):
+                d = span * (len(words[k]) + 1) / tot
+                times[k] = (t0, t0 + d * 0.9)
+                t0 += d
+            i = j
+    matched = len(known)
+    print(f"captions: chunk at {off:.0f}s, {matched}/{len(words)} words timed by the recogniser", flush=True)
+    return [(w, off + t[0], off + t[1]) for w, t in zip(words, times)]
+
+
+def ass_time(t):
+    t = max(0.0, t)
+    return "%d:%02d:%02d.%02d" % (int(t // 3600), int(t % 3600 // 60), int(t % 60), int(t * 100 % 100))
+
+
+def write_ass(path):
+    allw = []
+    for v in spec["voice"]:
+        allw += timed_words(v)
+    lines = []
+    cur = []
+    for k, (w, s0, s1) in enumerate(allw):
+        cur.append((w, s0, s1))
+        text = " ".join(x[0] for x in cur)
+        nxt = allw[k + 1] if k + 1 < len(allw) else None
+        brk = (nxt is None or len(cur) >= 7 or len(text) >= 30 or re.search(r"[.!?;:]$", w)
+               or (nxt and nxt[1] - s1 > 0.6) or (len(cur) >= 4 and w.endswith(",")))
+        if brk:
+            lines.append(cur)
+            cur = []
+    ev = []
+    for ln in lines:
+        st, en = ln[0][1], ln[-1][2] + 0.25
+        parts = []
+        for k, (w, s0, s1) in enumerate(ln):
+            nxt = ln[k + 1][1] if k + 1 < len(ln) else s1
+            parts.append("{\\kf%d}%s" % (max(1, int(round((nxt - s0) * 100))), w.replace("{", "(").replace("}", ")")))
+        ev.append("Dialogue: 0,%s,%s,Cap,,0,0,0,,%s" % (ass_time(st), ass_time(en), " ".join(parts)))
+    head = """[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,Poppins,74,&H0034A0FF,&H00FFFFFF,&H00000000,&H96000000,-1,0,0,0,100,100,0,0,1,5,2,2,120,120,110,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+"""
+    open(path, "w", encoding="utf-8").write(head + "\n".join(ev) + "\n")
+    return len(ev)
+
 # ---------- music: calm war drone + slow drums, quieter under the voice ----------
 SR = 24000
 T = float(spec["total"])
@@ -257,8 +374,13 @@ flt.append(f"[{nv + 1}:a]aresample=48000,volume=0.22[m]")
 flt.append("[voice]asplit[vo][sc]")
 flt.append("[m][sc]sidechaincompress=threshold=0.03:ratio=6:attack=20:release=400[md]")
 flt.append("[vo][md]amix=inputs=2:normalize=0,alimiter=limit=0.95[a]")
+ass = os.path.join(WORK, "captions.ass")
+ncap = write_ass(ass)
+print("caption lines:", ncap, flush=True)
+fontsdir = os.path.join(ENG, "fonts")
+flt.append("[0:v]subtitles=filename=%s:fontsdir=%s[vout]" % (ass.replace(":", "\\:"), fontsdir.replace(":", "\\:")))
 sh([FF, "-y", "-loglevel", "error", "-i", silent] + ins + ["-i", mwav, "-filter_complex", ";".join(flt),
-    "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ac", "2", "-t", f"{T:.2f}", "-movflags", "+faststart", spec["out"]])
+    "-map", "[vout]", "-map", "[a]", "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-ac", "2", "-t", f"{T:.2f}", "-movflags", "+faststart", spec["out"]])
 sh([FF, "-y", "-loglevel", "error", "-i", spec["out"], "-vf", "scale=640:360", "-c:v", "libx264", "-preset", "veryfast", "-crf", "32", "-c:a", "aac", "-b:a", "64k", spec["preview"]])
 thumbnail(spec["thumb"])
 for s in segs:

@@ -161,7 +161,7 @@ async function main() {
   const voiceAt = [];
   let tcur = 5;
   for (const piece of pieces) {
-    voiceAt.push({ file: piece.file, start: tcur });
+    voiceAt.push({ file: piece.file, start: tcur, dur: piece.dur, text: piece.group.map(p => p.text).join(' ') });
     for (const p of piece.group) {
       const mine = shots.filter(x => x.para === p);
       mine.forEach((sh, k) => {

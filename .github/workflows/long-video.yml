@@ -35,6 +35,7 @@ jobs:
       GEMINI_TTS_MODEL: gemini-3.8-flash-tts
       LONG_VOICE: Charon
       LONG_VOICE_CHUNKS: "4"
+      WHISPER_MODEL: base.en
       ENGINE_SHA: 2b676f22080b83d1a3a6e84d693d1c17fd3a44b5
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
@@ -56,7 +57,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -q pillow numpy
+      - run: pip install -q pillow numpy faster-whisper==1.1.1
+      - name: Reuse the speech model between runs
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: whisper-base-en-v1
       - name: Get the map engine and add the long-video files
         run: |
           git clone -q https://github.com/shehrozimtiaz0797-7/empire-maps-pipeline engine
