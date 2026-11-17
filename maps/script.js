@@ -19,8 +19,15 @@ function addHistory(entry) {
   fs.writeFileSync(HISTORY, JSON.stringify(h.slice(-500), null, 2));
 }
 
+// At most 5 map years per Short, so a video stays about 30-38 seconds (short Shorts are watched to the end).
 function angles(t) {
-  return [{ angle: 'full', years: t.years }];
+  let ys = t.years;
+  if (ys.length > 5) {
+    const pick = [];
+    for (let i = 0; i < 5; i++) pick.push(ys[Math.round(i * (ys.length - 1) / 4)]);
+    ys = [...new Set(pick)];
+  }
+  return [{ angle: 'full', years: ys }];
 }
 
 // topics.json is in order of interest. Never-made topics first; after that, the one made longest ago.
@@ -59,8 +66,9 @@ Write:
 - "lines": exactly ${n + 1} narration lines in ROMAN URDU. Line 1 (the hook) is shown with the map of ${yearText(p.years[0])}; ${p.years.slice(1).map((y, i) => `line ${i + 2} with the map of ${yearText(y)}`).join('; ')}; the last line is the closing line on the final map. So line 2 must talk about ${yearText(p.years[1] ?? p.years[0])} (or an event just before it), line 3 about ${yearText(p.years[2] ?? p.years[p.years.length - 1])}, and so on (Urdu written in English letters, the way people type on WhatsApp, e.g. "1947 mein ek naya mulk bana: Pakistan."). These are the on-screen captions.
   * Line 1 is the hook: surprise, contrast or a question that makes people stay, e.g. "Kya aap jante hain, 1880 mein Pakistan naam ka koi mulk nahi tha?"
   * Each middle line starts with a year ("1880 mein ...", "1947 tak ...") and says what changed on the map: wars, treaties, independence, partition, who took what. Name real places and real people.
-  * The last line lands the story in one strong sentence, then asks the viewer a question for the comments.
-  * 10 to 18 words per line. Simple everyday Urdu, like a great storyteller. No hard Persian/Arabic words.
+  * The last line is a LOOP line: one short punchy sentence that flows straight back into line 1 when the Short replays (for example, if line 1 is about Pakistan not existing in 1880, the last line could end with 'aur ye sab shuru hua tha 1880 se, jab...'). No question in the last line, the screen already asks one.
+  * The hook must grab in the first 2 seconds: open with the most shocking fact or a direct question. No slow intro, never 'Aaj hum dekhenge' or 'Is video mein'.
+  * 7 to 13 words per line (the whole Short must be 30 to 38 seconds). Simple everyday Urdu, like a great storyteller. No hard Persian/Arabic words.
   * Only well-known, true history. No made-up numbers. Strictly neutral: no praise or hate of any country, religion or people; for disputed areas (like Kashmir) do not take sides, just leave them out.
 - "speak": the same ${n + 1} lines, word for word the same meaning, written in Urdu script (نستعلیق). This is what the voice reads. Write years as digits.
 ${SCENES_RULE(n)}
@@ -79,8 +87,9 @@ Write:
 - "lines": exactly ${n + 1} narration lines. Line 1 (the hook) is shown with the map of ${yearText(p.years[0])}; ${p.years.slice(1).map((y, i) => `line ${i + 2} with the map of ${yearText(y)}`).join('; ')}; the LAST line is the closing line on the final map. Each middle line must talk about its own map's year (or a battle just before it).
   * Line 1 is the hook: tension, surprise or a question that makes people stay, e.g. "In 1938, Germany was about to start the deadliest war in history."
   * Each middle line starts with a year ("In 1941, ...", "By 1944, ...") and tells the war like a thriller: the big battles, invasions, turning points and who won. Name real battles, places and commanders.
-  * The last line lands the story in one strong sentence, then asks the viewer a question to answer in the comments.
-  * 10 to 18 words per line. ${Math.round((n + 1) * 13)} to ${Math.round((n + 1) * 16)} words in total. Simple, gripping English, like a great documentary narrator.
+  * The last line is a LOOP line: one short punchy sentence that flows straight back into line 1 when the Short replays (for example, if line 1 is 'In 1938, Germany was about to start the deadliest war in history', the last line could be 'And it all began in 1938, when...'). No question in the last line, the screen already asks one.
+  * The hook must grab in the first 2 seconds: open with the most shocking fact or a direct question. No slow intro, never 'In this video' or 'Today we'.
+  * 7 to 13 words per line, ${Math.round((n + 1) * 9)} to ${Math.round((n + 1) * 12)} words in total (the whole Short must be 30 to 38 seconds). Simple, gripping English, like a great documentary narrator.
   * Only well-known, true history. No made-up numbers. Neutral tone: no praise of war crimes and no hate of any nation, religion or people.
 ${SCENES_RULE(n)}
 - "hook_text": the on-screen title, 4 to 7 words, a curiosity title different from line 1 (e.g. "How Hannibal Almost Destroyed Rome").
@@ -98,13 +107,13 @@ function checkPrompt(p, s) {
 lines: ${JSON.stringify(s.lines, null, 1)}
 speak: ${JSON.stringify(s.speak, null, 1)}
 
-Fix any wrong fact, wrong date, exaggeration presented as fact, or anything that takes sides on a disputed border. Keep the same number of lines, style and length (10 to 18 words each). If you change a line, change the same line in "speak" too. Keep correct lines exactly as they are.
+Fix any wrong fact, wrong date, exaggeration presented as fact, or anything that takes sides on a disputed border. Keep the same number of lines, style and length (7 to 13 words each). If you change a line, change the same line in "speak" too. Keep correct lines exactly as they are.
 Return ONLY JSON: {"lines": [...], "speak": [...], "changed": number of lines you changed}`;
   }
   return `You are a careful history fact-checker. These narration lines go with maps of ${p.topic.name} at the snapshot years ${ys} (the last line is a closing line). A line may name the real year of a battle or event between snapshots.
 ${JSON.stringify(s.lines, null, 1)}
 
-Fix any line that has a wrong fact, a wrong date, or an exaggeration presented as fact. Keep the same number of lines, the same style and about the same length (10 to 18 words each). Keep correct lines exactly as they are.
+Fix any line that has a wrong fact, a wrong date, or an exaggeration presented as fact. Keep the same number of lines, the same style and about the same length (7 to 13 words each). Keep correct lines exactly as they are.
 Return ONLY JSON: {"lines": [...], "changed": number of lines you changed}`;
 }
 
@@ -128,7 +137,7 @@ function validate(p, s) {
   const lines = tidy(s.lines);
   if (lines.length !== n + 1) throw new Error(`need ${n + 1} lines, got ${lines.length}`);
   const words = lines.join(' ').split(' ').length;
-  if (words < (n + 1) * 8 || words > (n + 1) * 20) throw new Error(`script is ${words} words`);
+  if (words < (n + 1) * 5 || words > (n + 1) * 16) throw new Error(`script is ${words} words`);
   let speak = null;
   if (URDU) {
     speak = tidy(s.speak);
