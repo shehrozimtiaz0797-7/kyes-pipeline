@@ -93,7 +93,7 @@ Write:
   * Only well-known, true history. No made-up numbers. Neutral tone: no praise of war crimes and no hate of any nation, religion or people.
 ${SCENES_RULE(n)}
 - "hook_text": the on-screen title, 4 to 7 words, a curiosity title different from line 1 (e.g. "How Hannibal Almost Destroyed Rome").
-- "title": YouTube title under 70 characters with 1 emoji at the end, curious and searchable (e.g. "World War 2 on a Map in 50 Seconds ⚔️").
+- "title": YouTube title under 70 characters with 1 emoji at the end, curious and searchable (e.g. "How World War 1 Destroyed Four Empires ⚔️"); never mention a number of seconds.
 - "description": 2 short sentences about the video, then a blank line, then 4 hashtags (#history #war #shorts and one about this war).
 - "tags": 10 to 14 search tags.
 
