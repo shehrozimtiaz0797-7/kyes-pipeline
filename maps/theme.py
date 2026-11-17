@@ -39,5 +39,13 @@ s = s.replace("sfill=(40, 22, 4)", "sfill=%s" % t["YEAR_SHADOW"])
 s = s.replace("sfill=(40, 8, 8", "sfill=%s" % t["LABEL_STROKE"])
 if n != 9:
     sys.exit("theme: expected 9 colour lines, changed %d" % n)
+# camera fix: when the map is zoomed all the way out, the crop could be a hair wider than the canvas
+# (rounding), which made PIL fail with "box offset can't be negative" (Reconquista, 17 Nov)
+fix_old = "    left = min(max(0, left), geo.W - w)\n    top = min(max(0, top), geo.H - h)\n"
+fix_new = "    w, h = min(w, geo.W), min(h, geo.H)\n    left = max(0.0, min(left, geo.W - w))\n    top = max(0.0, min(top, geo.H - h))\n"
+if fix_old in s:
+    s = s.replace(fix_old, fix_new)
+elif fix_new not in s:
+    sys.exit("theme: camera code not found")
 open(path, "w", encoding="utf-8").write(s)
 print("theme %s applied" % name)
