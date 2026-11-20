@@ -24,3 +24,5 @@
 - 17 Nov 01:30 MY: long videos cancelled on owner request; long-video.yml workflow disabled (files kept, nothing runs). Shorts only.
 - 17 Nov 18:30 MY: for more views: hook in the first 2 seconds, Shorts now 30-38 s (max 5 map years, 7-13 words per line), last line loops back into the first line.
 - 18 Nov 02:15 MY: fixed render crash 'box offset can't be negative' (camera crop a hair wider than the map when fully zoomed out; hit the Reconquista Short). Patch applied in maps/theme.py.
+
+* 2026-11-21: back to the horror POV Shorts (owner request: "jesy phely tha wesa"). The workflow is the last horror version (before 'Switch to map videos'), with the current cron-job.org slot hours kept. maps/ files stay unused.
