@@ -1,0 +1,123 @@
+{
+  "kind": "wars-en",
+  "topic": {
+    "id": "seleucid",
+    "label": "SELEUCID EMPIRE",
+    "labels": {},
+    "name": "the wars of the Seleucid Empire",
+    "names": [
+      "Seleucid Kingdom"
+    ]
+  },
+  "angle": "full",
+  "years": [
+    -300,
+    -200,
+    -100
+  ],
+  "lines": [
+    "Did you know Alexander's largest successor empire slowly collapsed over time?",
+    "In 190 BC, Roman legions crushed King Antiochus at Magnesia.",
+    "By 100 BC, Parthian invasions reduced the grand empire to Syria.",
+    "This catastrophic downfall leaves historians constantly asking:"
+  ],
+  "scenes": [
+    {
+      "year": -300,
+      "markers": [
+        {
+          "name": "Seleucia",
+          "lat": 33.1,
+          "lon": 44.52
+        },
+        {
+          "name": "Antioch",
+          "lat": 36.2,
+          "lon": 36.16
+        }
+      ],
+      "arrow": {
+        "from": {
+          "lat": 32.54,
+          "lon": 44.42
+        },
+        "to": {
+          "lat": 38.71,
+          "lon": 30.69
+        }
+      }
+    },
+    {
+      "year": -200,
+      "markers": [
+        {
+          "name": "Magnesia",
+          "lat": 38.56,
+          "lon": 27.42
+        },
+        {
+          "name": "Panium",
+          "lat": 33.24,
+          "lon": 35.69
+        }
+      ],
+      "arrow": {
+        "from": {
+          "lat": 39,
+          "lon": 21
+        },
+        "to": {
+          "lat": 38.56,
+          "lon": 27.42
+        }
+      }
+    },
+    {
+      "year": -100,
+      "markers": [
+        {
+          "name": "Antioch",
+          "lat": 36.2,
+          "lon": 36.16
+        },
+        {
+          "name": "Ctesiphon",
+          "lat": 33.09,
+          "lon": 44.58
+        }
+      ],
+      "arrow": {
+        "from": {
+          "lat": 35.76,
+          "lon": 54.34
+        },
+        "to": {
+          "lat": 33.1,
+          "lon": 44.52
+        }
+      }
+    },
+    {
+      "year": -100,
+      "markers": [],
+      "arrow": null
+    }
+  ],
+  "hook_text": "Rise and Fall of Seleucid Empire",
+  "title": "How Rome Destroyed Alexander's Largest Empire ⚔️",
+  "description": "Discover how the massive Seleucid Empire collapsed after facing Roman legions and Parthian horse archers. Witness the dramatic territorial decline of Alexander the Great's successor state.\n\n#history #war #shorts #ancientrome\n\nMap borders: historical-basemaps by André Ourednik (GPL-3.0). Narration: AI voice.",
+  "tags": [
+    "seleucid empire",
+    "alexander the great",
+    "battle of magnesia",
+    "ancient rome",
+    "antiochus the great",
+    "parthia",
+    "ancient history",
+    "war maps",
+    "roman empire",
+    "history shorts",
+    "hellenistic period",
+    "ancient wars"
+  ]
+}

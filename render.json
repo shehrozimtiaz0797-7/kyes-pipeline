@@ -1,0 +1,122 @@
+{
+  "topic": {
+    "id": "seleucid",
+    "label": "SELEUCID EMPIRE",
+    "labels": {},
+    "name": "the wars of the Seleucid Empire",
+    "names": [
+      "Seleucid Kingdom"
+    ]
+  },
+  "scenes": [
+    {
+      "year": -300,
+      "markers": [
+        {
+          "name": "Seleucia",
+          "lat": 33.1,
+          "lon": 44.52
+        },
+        {
+          "name": "Antioch",
+          "lat": 36.2,
+          "lon": 36.16
+        }
+      ],
+      "arrow": {
+        "from": {
+          "lat": 32.54,
+          "lon": 44.42
+        },
+        "to": {
+          "lat": 38.71,
+          "lon": 30.69
+        }
+      }
+    },
+    {
+      "year": -200,
+      "markers": [
+        {
+          "name": "Magnesia",
+          "lat": 38.56,
+          "lon": 27.42
+        },
+        {
+          "name": "Panium",
+          "lat": 33.24,
+          "lon": 35.69
+        }
+      ],
+      "arrow": {
+        "from": {
+          "lat": 39,
+          "lon": 21
+        },
+        "to": {
+          "lat": 38.56,
+          "lon": 27.42
+        }
+      }
+    },
+    {
+      "year": -100,
+      "markers": [
+        {
+          "name": "Antioch",
+          "lat": 36.2,
+          "lon": 36.16
+        },
+        {
+          "name": "Ctesiphon",
+          "lat": 33.09,
+          "lon": 44.58
+        }
+      ],
+      "arrow": {
+        "from": {
+          "lat": 35.76,
+          "lon": 54.34
+        },
+        "to": {
+          "lat": 33.1,
+          "lon": 44.52
+        }
+      }
+    },
+    {
+      "year": -100,
+      "markers": [],
+      "arrow": null
+    }
+  ],
+  "lines": [
+    "Did you know Alexander's largest successor empire slowly collapsed over time?",
+    "In 190 BC, Roman legions crushed King Antiochus at Magnesia.",
+    "By 100 BC, Parthian invasions reduced the grand empire to Syria.",
+    "This catastrophic downfall leaves historians constantly asking:"
+  ],
+  "hook_text": "Rise and Fall of Seleucid Empire",
+  "line_starts": [
+    1.55,
+    7.3869169999999995,
+    12.720813,
+    18.134958
+  ],
+  "line_ends": [
+    5.886354000000001,
+    11.410979,
+    16.803458,
+    22.026042
+  ],
+  "total": 24.226042,
+  "intro": 1.6,
+  "voice_end": 22.026042,
+  "font_serif": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/fonts/Lora-Variable.ttf",
+  "font_bold": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/fonts/Poppins-Bold.ttf",
+  "font_medium": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/fonts/Poppins-Medium.ttf",
+  "data_dir": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/data",
+  "ffmpeg": "ffmpeg",
+  "out": "/home/runner/work/kyes-pipeline/kyes-pipeline/engine/output/2026-11-20_23-55_seleucid-full/silent.mp4",
+  "seed": 45959
+}
