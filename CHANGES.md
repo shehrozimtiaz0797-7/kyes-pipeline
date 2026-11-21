@@ -26,3 +26,8 @@
 - 18 Nov 02:15 MY: fixed render crash 'box offset can't be negative' (camera crop a hair wider than the map when fully zoomed out; hit the Reconquista Short). Patch applied in maps/theme.py.
 
 * 2026-11-21: back to the horror POV Shorts (owner request: "jesy phely tha wesa"). The workflow is the last horror version (before 'Switch to map videos'), with the current cron-job.org slot hours kept. maps/ files stay unused.
+
+## 2026-11-22 (04:57 MY)
+- STOPPED by the owner ("ai wala and kyes ko band kar do, bs empire maps"). All workflows of this repo were disabled in GitHub Actions
+  (Disable workflow), so cron-job.org calls no longer start any run. Nothing was deleted: the code, the videos and the channel stay as they are.
+  To start again: Actions tab -> the workflow -> "Enable workflow".
